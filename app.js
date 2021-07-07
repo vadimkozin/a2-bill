@@ -1,8 +1,10 @@
 const express = require('express')
 const config = require('config')
 const path = require('path')
+const cors = require('cors')
 const customersRouter = require('./routes/customers')
 const numbersRouter = require('./routes/numbers')
+const tariffsRouter = require('./routes/tariffs')
 
 
 const app = express()
@@ -34,10 +36,12 @@ const myLogger = (req, res, next) => {
 }
 
 app.use(myLogger)
+app.use(cors())
 
 app.get('/abc', (req, res) => res.send('Hello World!'))
 app.use('/api/customers', customersRouter)
 app.use('/api/numbers', numbersRouter)
+app.use('/api/tariffs', tariffsRouter)
 
 
 app.get('/*', function (req, res) {

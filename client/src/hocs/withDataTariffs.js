@@ -1,29 +1,24 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import CProgress from 'src/common/circular-progress'
-import { makeStyles } from '@material-ui/core/styles'
-import { getTariffAsync } from 'src/mock/storeMock'
-
-const useStyles = makeStyles((theme) => ({
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-}))
+// import { getTariffAsync } from 'src/mock/storeMock'
+import { fetchTariffs} from 'src/store/api-action'
+import ShowError from 'src/common/show-error'
+import ShowProgress from 'src/common/show-progress'
 
 const withDataTariffs = (Component) => (props) => {
-  const classes = useStyles()
   const { tariffId } = props
   const [data, setData] = useState(null)
+  const [error, setError] = useState(null)
   const mountedRef = useRef(true)
 
   const fetchData = useCallback(async () => {
     try {
-      const tariff = await getTariffAsync(tariffId)
+      // const tariff = await getTariffAsync(tariffId)
+      const tariffs = await fetchTariffs(tariffId)
       if (!mountedRef.current) return null
-      setData(tariff)
+      setData(tariffs)
     } catch (error) {
-      console.log(`error::`, error)
-      throw error
+      // throw error
+      setError(error)
     }
   }, [tariffId])
 
@@ -37,12 +32,12 @@ const withDataTariffs = (Component) => (props) => {
   //   getTariffAsync(tariffId).then((data) => setData(data))
   // }, [tariffId])
 
+  if (error) {
+    return <ShowError error={error} />
+  }
+
   if (data === null) {
-    return (
-      <div className={classes.wrapper}>
-        <CProgress size={24} />
-      </div>
-    )
+    return <ShowProgress />
   }
 
   return <Component {...props} data={data} />

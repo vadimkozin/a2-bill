@@ -1,31 +1,22 @@
 import React, { useState, useEffect, useRef, useCallback } from 'react'
-import CProgress from 'src/common/circular-progress'
-import { makeStyles } from '@material-ui/core/styles'
-import { getNumbersAsync } from 'src/mock/storeMock'
-
-const useStyles = makeStyles((theme) => ({
-  wrapper: {
-    display: 'flex',
-    justifyContent: 'center',
-  },
-}))
+import { fetchNumbers } from 'src/store/api-action'
+import ShowError from 'src/common/show-error'
+import ShowProgress from 'src/common/show-progress'
 
 const withDataNumbers = (Component) => (props) => {
-  const classes = useStyles()
-  const { isOnlyA2 } = props
   const [data, setData] = useState(null)
   const mountedRef = useRef(true)
+  const [error, setError] = useState(null)
 
   const fetchData = useCallback(async () => {
     try {
-      const numbers = await getNumbersAsync(isOnlyA2)
+      const numbers = await fetchNumbers()
       if (!mountedRef.current) return null
       setData(numbers)
     } catch (error) {
-      console.log(`error::`, error)
-      throw error
+      setError(error)
     }
-  }, [isOnlyA2])
+  }, [])
 
   useEffect(() => {
     fetchData()
@@ -36,14 +27,14 @@ const withDataNumbers = (Component) => (props) => {
   //   getNumbersAsync(isOnlyA2).then((data) => setData(data))
   // }, [isOnlyA2])
 
-  if (data === null) {
-    return (
-      <div className={classes.wrapper}>
-        <CProgress size={24} />
-      </div>
-    )
+  if (error) {
+    return <ShowError error={error} />
   }
 
+  if (data === null) {
+    return <ShowProgress />
+  }
+  
   return <Component {...props} data={data} />
 }
 

@@ -1,7 +1,9 @@
 module.exports = (res, error) => {
   res.status(500).json({
       success: false,
-      message: error.message ? error.message + more(error) : error
+      message: error.message ? error.message + more(error) : error,
+      // code: error.code ? error.code : 'NOCODE',
+      ecode: error.code ? error.code : 'NOCODE'
   })
 }
 

@@ -1,4 +1,4 @@
-import { formatDateSql, formatDate1 } from '../utils'
+import { formatDate, formatDateSql, formatDate1 } from '../utils'
 import { tariffsTelList } from './tariffs'
 
 const getYN = (bool) => (bool === true ? 'Y' : 'N')
@@ -153,7 +153,7 @@ export const numberAdapter = {
       xnumber: o.xnumber, // полный номер (7495626xxxx)
       custId: o.cust_id, // код клиента
       custName: o.cust_name, // название клиента,
-      dateOn: o.date_on, // дата начала предоставления услуги
+      dateOn: formatDate.dmy(new Date(o.date_on)), // дата начала предоставления услуги
     }
   },
 }

@@ -5,7 +5,32 @@ export const isDate = (obj) =>
 
 export const isObject = (value) => typeof value === 'object' && value !== null
 
-export const formatDate = (date, delimiter = '/') => {
+// добавляет ведущие нули: ( '2' => '02')
+const addZeros = (number, digitsInNumber = 2) => {
+  return `${number}`.padStart(digitsInNumber, `0`)
+}
+
+// форматривание дат: my:'October 2020' ymd:'2020-10-25' dmy:'25-10-2021'
+export const formatDate = {
+  // my: (date) => `${MONTHS[date.getMonth()]} ${date.getFullYear()}`,
+  // 30-apr-2021 -> 2021-04-30
+  ymd: (date) =>
+    `${date.getFullYear()}-${addZeros(date.getMonth() + 1)}-${addZeros(
+      date.getDate()
+    )}`,
+  // 30-apr-2021 -> 30-04-2021
+  dmy: (date, delimiter = '-') =>
+    `${addZeros(date.getDate())}${delimiter}${addZeros(
+      date.getMonth() + 1
+    )}${delimiter}${date.getFullYear()}`,
+  // 30-apr-2021 -> 20210430000000
+  mysql: (date) =>
+    `${date.getFullYear()}${addZeros(date.getMonth() + 1)}${addZeros(
+      date.getDate()
+    )}000000`,
+}
+
+export const formatDate__ = (date, delimiter = '/') => {
   // 30 apr 2021 -> 30/04/2021
   let dd = date.getDate()
   if (dd < 10) dd = '0' + dd
@@ -91,5 +116,5 @@ export const getPeriod = (yyyy_mm) => {
 
 // уникальные элементы массива
 export const uniqArray = (array) => {
-  return Array.from(new Set(array));
-};
+  return Array.from(new Set(array))
+}

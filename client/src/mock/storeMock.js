@@ -15,7 +15,7 @@ import { reportYears as reportYearsJson } from './reports'
 import { reportMonths as reportMonthsJson } from './reports'
 import { reportFiles as reportFilesJson } from './reports'
 
-const DELAY = 1000 * 1
+const DELAY = 1000 * 0.5
 
 const sort = (items, fieldSort) =>
   items.sort((a, b) => {
