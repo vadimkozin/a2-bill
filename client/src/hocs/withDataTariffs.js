@@ -1,36 +1,41 @@
-import React, { useState, useEffect, useRef, useCallback } from 'react'
-// import { getTariffAsync } from 'src/mock/storeMock'
-import { fetchTariffs} from 'src/store/api-action'
+import React, {
+  useState,
+  useEffect,
+  useRef,
+  useCallback,
+  useContext,
+} from 'react'
+import { fetchTariffs } from 'src/store/api-action'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
+import { ContextApp, ctx } from 'src/common/context-app'
 
 const withDataTariffs = (Component) => (props) => {
-  const { tariffId } = props
+  // eslint-disable-next-line
+  const [contextApp, setContextApp] = useContext(ContextApp)
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
   const mountedRef = useRef(true)
 
   const fetchData = useCallback(async () => {
     try {
-      // const tariff = await getTariffAsync(tariffId)
-      const tariffs = await fetchTariffs(tariffId)
-      if (!mountedRef.current) return null
-      setData(tariffs)
+      if (ctx.isTariffs(contextApp)) {
+        setData(contextApp.tariffs)
+      } else {
+        const tariffs = await fetchTariffs()
+        if (!mountedRef.current) return null
+        setData(tariffs)
+        setContextApp((context) => ({ ...context, tariffs }))
+      }
     } catch (error) {
-      // throw error
       setError(error)
     }
-  }, [tariffId])
+  }, [contextApp, setContextApp])
 
   useEffect(() => {
     fetchData()
     return () => (mountedRef.current = false)
   }, [fetchData])
-
-
-  // useEffect(() => {
-  //   getTariffAsync(tariffId).then((data) => setData(data))
-  // }, [tariffId])
 
   if (error) {
     return <ShowError error={error} />

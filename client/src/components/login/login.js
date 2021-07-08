@@ -13,9 +13,14 @@ import { ContextApp } from 'src/common/context-app'
 import { LOGIN_TYPE } from 'src/types/types'
 
 const initialValues = {
-  login: null,
-  password: null,
+  login: 'vadim',
+  password: '12345678',
 }
+
+// const initialValues = {
+//   login: null,
+//   password: null,
+// }
 
 const schema = yup.object().shape({
   login: yup.string().min(5, hints.min).max(20, hints.max).required(),

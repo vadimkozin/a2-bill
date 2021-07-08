@@ -6,7 +6,7 @@ import {
 } from 'src/store/adapters'
 
 const BACKEND_URL = `http://localhost:5000/api/`
-const TIMEOUT_MAX = 1000 * 2
+const TIMEOUT_MAX = 1000 * 2.5
 
 const fetchList = async (what, adapter, id = null) => {
   const controller = new AbortController()
@@ -34,31 +34,9 @@ const fetchList = async (what, adapter, id = null) => {
 
 export const fetchCustomers = () => fetchList('customers', customerAdapter)
 export const fetchNumbers = () => fetchList('numbers', numberAdapter)
-export const fetchTariffs = (tarId) => fetchList('tariffs', tariffAdapter, tarId)
+export const fetchTariffs = () => fetchList('tariffs', tariffAdapter)
+export const fetchTariff = (tarId) => fetchList('tariffs', tariffAdapter, tarId)
 
-
-export const fetchNumbers_ = async (what = 'numbers') => {
-  let controller = new AbortController()
-  setTimeout(() => controller.abort(), 1000)
-
-  try {
-    const response = await fetch(`${BACKEND_URL}${what}`, {
-      signal: controller.signal,
-    })
-    if (response.ok) {
-      const numbers = await response.json()
-      return numberAdapter.adaptToClient(numbers)
-    } else {
-      const err = await response.json()
-      throw err
-    }
-  } catch (err) {
-    if (err.name === 'AbortError') {
-      err.ecode = err.name
-    }
-    throw err
-  }
-}
 
 export const fetchNumbers__ = async (what = 'numbers') => {
   const response = await fetch(`${BACKEND_URL}${what}`)
@@ -67,18 +45,6 @@ export const fetchNumbers__ = async (what = 'numbers') => {
     // http-status: 200-299
     const numbers = await response.json()
     return numberAdapter.adaptToClient(numbers)
-  } else {
-    const err = await response.json()
-    throw err
-  }
-}
-
-export const fetchCustomers__ = async (what = 'customers') => {
-  const response = await fetch(`${BACKEND_URL}${what}`)
-
-  if (response.ok) {
-    const customers = await response.json()
-    return customerAdapter.adaptToClient(customers)
   } else {
     const err = await response.json()
     throw err

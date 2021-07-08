@@ -118,3 +118,5 @@ export const getPeriod = (yyyy_mm) => {
 export const uniqArray = (array) => {
   return Array.from(new Set(array))
 }
+
+

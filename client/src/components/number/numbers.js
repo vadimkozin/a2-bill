@@ -5,7 +5,6 @@ import { makeStyles } from '@material-ui/core/styles'
 import SwapHorizOutlinedIcon from '@material-ui/icons/SwapHorizOutlined'
 import Page from 'src/components/page/page'
 import ItemsList from 'src/common/items-list'
-// import Toolbar from './toolbar'
 import ToolbarSearch from 'src/common/x-toolbar'
 import { getFiltred } from 'src/utils'
 import { NUMBERS_TYPE } from 'src/types/types'
@@ -67,7 +66,6 @@ const Numbers = ({ data, params = numberParams }) => {
           params={toolbarParams(selectedNumber)}
           onSearch={handleSearch}
         />
-        {/* <Toolbar onSearch={handleSearch} /> */}
         <Box mt={1}>
           <ItemsList
             items={numbers}

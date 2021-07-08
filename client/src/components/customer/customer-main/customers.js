@@ -4,8 +4,6 @@ import Container from '@material-ui/core/Container'
 import { makeStyles } from '@material-ui/core/styles'
 import Page from 'src/components/page/page'
 import ItemsList from 'src/common/items-list'
-// import Toolbar from './toolbar'
-
 import ToolbarSearch from 'src/common/x-toolbar'
 import PersonAddOutlinedIcon from '@material-ui/icons/PersonAddOutlined'
 import EditOutlinedIcon from '@material-ui/icons/EditOutlined'
@@ -79,8 +77,7 @@ const Customers = ({ data, params = customerParams }) => {
           params={toolbarParams(selectedCust)}
           onSearch={handleSearch}
         />
-        {/* <Toolbar onSearch={handleSearch} selectedCust={selectedCust} /> */}
-        <Box mt={2}>
+        <Box mt={1}>
           <ItemsList
             items={customers}
             params={params}

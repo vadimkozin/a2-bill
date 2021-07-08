@@ -133,6 +133,7 @@ export const tariffAdapter = {
 
   adaptToClientTariff(o) {
     return {
+      tid: o.tid, // код тарифа
       nid: o.nid, // код направления
       name: o.name, // название
       custTar: o.custTar, // клиентский тариф

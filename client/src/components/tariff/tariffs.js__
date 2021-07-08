@@ -7,6 +7,8 @@ import { isFindInText } from 'src/utils'
 import Page from 'src/components/page/page'
 import ItemsList from 'src/common/items-list'
 import { tariffsTelList } from 'src/store/tariffs'
+import CProgress from 'src/common/circular-progress'
+import { getTariff, getTariffAsync } from 'src/mock/storeMock'
 
 const useStyles = makeStyles((theme) => ({
   root: {
@@ -14,9 +16,6 @@ const useStyles = makeStyles((theme) => ({
     minHeight: '100%',
     paddingBottom: theme.spacing(1),
     paddingTop: 0,
-  },
-  toolbar: {
-    marginBottom: theme.spacing(1),
   },
   progress: {
     textAlign: 'center',
@@ -29,17 +28,14 @@ const tariffParams = {
   searchs: ['name'],
   key: 'name',
 }
-const getTariff = (tariffs, tarId) =>
-  tariffs.filter((tariff) => Number(tariff.tid) === Number(tarId))
 
-const Tariffs = ({ params = tariffParams, data }) => {
-  // data - array all tariffs
+const Tariffs = ({ params = tariffParams }) => {
   const classes = useStyles()
   const [tariff, setTariff] = useState(tariffsTelList[0])
-  const [tariffs, setTariffs] = useState(getTariff(data, 1))
-
+  const [tariffs, setTariffs] = useState(getTariff(1))
   const [snapshotTariffs, setSnapshotTariffs] = useState(tariffs)
   const [searchText, setSearchText] = useState('')
+  const [isLoading, setIsLoading] = useState(false)
 
   const handleSearch = (text) => {
     const filteredTariffs = snapshotTariffs.filter((it) =>
@@ -49,13 +45,15 @@ const Tariffs = ({ params = tariffParams, data }) => {
     setTariffs(filteredTariffs)
   }
 
-  const handleSelectTariff = (tar) => {
+  const handleSelectTariff = async (tar) => {
     setTariff(tar)
     setSearchText('')
 
-    const tariff = getTariff(data, tar.tid)
+    setIsLoading(true)
+    const tariff = await getTariffAsync(tar.tid)
     setTariffs(tariff)
     setSnapshotTariffs(tariff)
+    setIsLoading(false)
   }
 
   const handleSelectItem = (item) => {
@@ -66,12 +64,16 @@ const Tariffs = ({ params = tariffParams, data }) => {
     <Page className={classes.root} title='Tariffs'>
       <Container maxWidth={false}>
         <Toolbar
-          className={classes.toolbar}
           onSearch={handleSearch}
           onSelect={handleSelectTariff}
           tariff={tariff}
           searchText={searchText}
         />
+        {isLoading ? (
+          <CProgress className={classes.progress} />
+        ) : (
+          <span>&nbsp;</span>
+        )}
         <Box mt={0}>
           <ItemsList
             items={tariffs}
