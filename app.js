@@ -6,7 +6,6 @@ const customersRouter = require('./routes/customers')
 const numbersRouter = require('./routes/numbers')
 const tariffsRouter = require('./routes/tariffs')
 
-
 const app = express()
 /**
  * get:  customers
@@ -17,6 +16,7 @@ const app = express()
  * put:  numbers/transfer/6261001
  *
  * get:  tariffs
+ * get:  tariffs/1
  *
  * get:  reports
  * get:  reports/2021

@@ -47,6 +47,7 @@ customersRouter.route('/').get(async (req, res) => {
       )
       .from('Cust')
       .where('a2', '+')
+      .orderBy('CustAlias')
     res.status(200).json(customers)
   } catch (e) {
     errorHandler(res, e)

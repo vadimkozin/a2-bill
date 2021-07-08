@@ -63,7 +63,7 @@ const routes = [
         element: <Outlet />,
         children: [
           { path: '/', element: <Numbers /> },
-          { path: 'transfer', element: <Navigate to='..' replace={true} /> },
+          // { path: 'transfer', element: <Navigate to='..' replace={true} /> },
           { path: 'transfer/:number', element: <NumberTransfer /> },
         ],
       },

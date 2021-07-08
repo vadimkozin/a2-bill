@@ -9,8 +9,6 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import MySelect from 'src/common/select'
 import DatePicker from 'src/common/date-picker'
-// import { customersList } from 'src/mock/storeMock'
-// import { getNumberInfo } from 'src/mock/storeMock'
 import ButtonsCancelSave from 'src/common/buttons-cancel-save'
 import { hints, obtainError, parameters } from 'src/common/helper-form'
 import { ContextApp, ctx } from 'src/common/context-app'
@@ -56,7 +54,6 @@ const NumberTransfer = () => {
   const [formErrors, setFormErrors] = useState({})
 
   const { number } = useParams()
-  // const info = getNumberInfo(number)
   const info = ctx.getNumberInfo(contextApp, number)
 
   const isValid =
@@ -87,7 +84,6 @@ const NumberTransfer = () => {
     return (
       <MySelect
         name='customer'
-        // options={customersList}
         options={ctx.getCustomersList(contextApp)}
         option_label='custAlias'
         option_value='custId'

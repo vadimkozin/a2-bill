@@ -23,10 +23,12 @@ export const ctx = {
       custAlias: customer.custAlias,
     }))
   },
+  getCustomer: (context, custId) =>
+    context['customers'].find((cust) => String(cust.custId) === String(custId)),
   getNumberInfo: (context, number) =>
     context['numbers'].find((numb) => String(numb.number) === String(number)),
-  getTariff: (context, tarId) =>
-    context['tariffs'].filter((tariff) => tariff.tid === tarId),
+  // getTariff: (context, tarId) =>
+  //   context['tariffs'].filter((tariff) => tariff.tid === tarId),
 }
 
 const isExist = (obj, item) => {

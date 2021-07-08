@@ -5,32 +5,29 @@ import React, {
   useCallback,
   useContext,
 } from 'react'
-import { fetchNumbers } from 'src/store/api-action'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
 import { ContextApp, ctx } from 'src/common/context-app'
 
-const withDataNumbers = (Component) => (props) => {
+const withDataCustomer = (Component) => (props) => {
   // eslint-disable-next-line
   const [contextApp, setContextApp] = useContext(ContextApp)
+  const { custId } = props
   const [data, setData] = useState(null)
   const mountedRef = useRef(true)
   const [error, setError] = useState(null)
 
   const fetchData = useCallback(async () => {
     try {
-      if (ctx.isNumbers(contextApp)) {
-        setData(contextApp.numbers)
-      } else {
-        const numbers = await fetchNumbers()
-        if (!mountedRef.current) return null
-        setData(numbers)
-        setContextApp((context) => ({ ...context, numbers }))
-      }
+      // const customer = await getCustomerAsync(custId)
+      const customer = await ctx.getCustomer(contextApp, custId)
+      console.log(`customer:`, customer)
+      if (!mountedRef.current) return null
+      setData(customer)
     } catch (error) {
       setError(error)
     }
-  }, [contextApp, setContextApp])
+  }, [custId, contextApp])
 
   useEffect(() => {
     fetchData()
@@ -48,4 +45,4 @@ const withDataNumbers = (Component) => (props) => {
   return <Component {...props} data={data} />
 }
 
-export default withDataNumbers
+export default withDataCustomer

@@ -5,7 +5,6 @@ import React, {
   useCallback,
   useContext,
 } from 'react'
-// import { getCustomersAsync } from 'src/mock/storeMock'
 import { fetchCustomers } from 'src/store/api-action'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
@@ -38,10 +37,6 @@ const withDataCustomers = (Component) => (props) => {
 
     return () => (mountedRef.current = false)
   }, [fetchData])
-
-  // useEffect(() => {
-  //   getCustomersAsync().then((data) => setData(data))
-  // }, [])
 
   if (error) {
     return <ShowError error={error} />

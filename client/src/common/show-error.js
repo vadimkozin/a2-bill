@@ -13,7 +13,11 @@ const FROM_ERRCODE_TO_MESSAGE_MAP = {
   'AbortError': 'Превышено время ожидания',
 }
 
-const getError = (error) => FROM_ERRCODE_TO_MESSAGE_MAP[error.ecode]
+const getError = (error) => {
+  let message = FROM_ERRCODE_TO_MESSAGE_MAP[error.ecode]
+  if (!message) message = error.message
+  return message
+}
 
 const ShowError = ({error}) => {
   const classes = useStyles()

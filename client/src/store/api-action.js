@@ -6,7 +6,7 @@ import {
 } from 'src/store/adapters'
 
 const BACKEND_URL = `http://localhost:5000/api/`
-const TIMEOUT_MAX = 1000 * 2.5
+const TIMEOUT_MAX = 1000 * 3
 
 const fetchList = async (what, adapter, id = null) => {
   const controller = new AbortController()
@@ -42,7 +42,6 @@ export const fetchNumbers__ = async (what = 'numbers') => {
   const response = await fetch(`${BACKEND_URL}${what}`)
 
   if (response.ok) {
-    // http-status: 200-299
     const numbers = await response.json()
     return numberAdapter.adaptToClient(numbers)
   } else {
