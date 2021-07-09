@@ -83,12 +83,12 @@ const useStyles = makeStyles((theme) => ({
 const FormPersonalMain = ({
   isNewCustomer = true,
   custType = 'f',
-  data = null,
+  customer = null,
 }) => {
   const classes = useStyles()
   const navigate = useNavigate()
   const [formValues, setFormValues] = useState(
-    isNewCustomer ? initialValues : data
+    isNewCustomer ? initialValues : customer
   )
   const [formErrors, setFormErrors] = useState({})
   const tarTel = isNewCustomer

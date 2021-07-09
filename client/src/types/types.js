@@ -8,7 +8,7 @@ const funcOrNull = oneOfType([func.isRequired, () => null])
 export const FORM_CUSTOMER_MAIN_TYPE = {
   isNewCustomer: bool.isRequired,
   custType: string,
-  data: object
+  customer: object
 }
 
 export const FORM_PERSONAL_TYPE = {

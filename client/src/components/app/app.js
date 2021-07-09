@@ -14,8 +14,8 @@ const App = () => {
   const [contextApp, setContextApp] = useState(appInit)
   console.log(`contextApp_first:`, contextApp)
 
-  const isEntryOk = contextApp && contextApp.login
-  console.log(`isEntryOk:`, isEntryOk)
+  // const isEntryOk = contextApp && contextApp.login
+  // console.log(`isEntryOk:`, isEntryOk)
 
   return (
     <ThemeProvider theme={theme}>

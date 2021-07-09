@@ -44,7 +44,7 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const NumberTransfer = () => {
+const NumberTransfer = (props) => {
   // eslint-disable-next-line
   const [contextApp, setContextApp] = useContext(ContextApp)
   const classes = useStyles()

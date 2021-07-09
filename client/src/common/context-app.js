@@ -24,7 +24,7 @@ export const ctx = {
     }))
   },
   getCustomer: (context, custId) =>
-    context['customers'].find((cust) => String(cust.custId) === String(custId)),
+  context['customers'].find((cust) => String(cust.custId) === String(custId)),
   getNumberInfo: (context, number) =>
     context['numbers'].find((numb) => String(numb.number) === String(number)),
   // getTariff: (context, tarId) =>

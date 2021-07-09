@@ -1,4 +1,6 @@
-import { formatDate, formatDateSql, formatDate1 } from '../utils'
+// import { formatDate, formatDateSql, formatDate1 } from '../utils'
+import { formatDate } from '../utils'
+
 import { tariffsTelList } from './tariffs'
 
 const getYN = (bool) => (bool === true ? 'Y' : 'N')
@@ -46,19 +48,19 @@ export const customerAdapter = {
       OKPO: o.bankOkpo,
       // dogovors
       NumDTelAbonRss: o.numDogTelAbon, // номер договора по телефонии на абон-плату
-      DateDTelAbonRss: formatDateSql(o.dateDogTelAbon), // дата договора по телефонии на абон-плату
+      DateDTelAbonRss: formatDate.mysql(o.dateDogTelAbon), // дата договора по телефонии на абон-плату
       NumDTelRssMtc: o.numDogTelMts, // номер договора по телефонии с МТС
-      DateDTelRssMtc: formatDateSql(o.dateDogTelMts), // дата договора по телефонии с МТС
-      DatePrDTelRssOOO: formatDateSql(o.datePrilDogTel), // дата приложения №2 к договору по телефонии на 626-е , new Date()
-      DatePrDTelRssOOO_642: formatDateSql(o.datePrilDogTel642), // дата приложения №2 к договору по телефонии на 642-е
+      DateDTelRssMtc: formatDate.mysql(o.dateDogTelMts), // дата договора по телефонии с МТС
+      DatePrDTelRssOOO: formatDate.mysql(o.datePrilDogTel), // дата приложения №2 к договору по телефонии на 626-е , new Date()
+      DatePrDTelRssOOO_642: formatDate.mysql(o.datePrilDogTel642), // дата приложения №2 к договору по телефонии на 642-е
       NumDInetRssOOO: o.numDogInet, // номер договора по интернет
-      DateDInetRssOOO: formatDateSql(o.dateDogInet), // дата договора по интерннет
+      DateDInetRssOOO: formatDate.mysql(o.dateDogInet), // дата договора по интерннет
       // fiz
       f_fio_notice: o.fzFioNotice, // (физ) ФИО в извещениях, например Петров М.П.
       f_contract_date: o.fzContractDate, // (физ) дата заключения договора
       f_contract_num: o.fzContractNum, // (физ) номер договора
       f_contract_document: o.fzContractDocument, // (физ) номер паспорта или номер того что в договоре
-      f_birthday: formatDateSql(o.fzBirthday), // (физ) день рождения
+      f_birthday: formatDate.mysql(o.fzBirthday), // (физ) день рождения
     }
   },
 
@@ -94,13 +96,13 @@ export const customerAdapter = {
       bankOkpo: o.OKPO,
       // dogovors
       numDogTelAbon: o.NumDTelAbonRss, // номер договора по телефонии на абон-плату
-      dateDogTelAbon: formatDate1(o.DateDTelAbonRss), // дата договора по телефонии на абон-плату
+      dateDogTelAbon: formatDate.one2one(o.DateDTelAbonRss), // дата договора по телефонии на абон-плату
       numDogTelMts: o.NumDTelRssMtc, // номер договора по телефонии с МТС
-      dateDogTelMts: formatDate1(o.DateDTelRssMtc), // дата договора по телефонии с МТС
-      datePrilDogTel: formatDate1(o.DatePrDTelRssOOO), // дата приложения №2 к договору по телефонии на 626-е , new Date()
-      datePrilDogTel642: formatDate1(o.DatePrDTelRssOOO_642), // дата приложения №2 к договору по телефонии на 642-е
+      dateDogTelMts: formatDate.one2one(o.DateDTelRssMtc), // дата договора по телефонии с МТС
+      datePrilDogTel: formatDate.one2one(o.DatePrDTelRssOOO), // дата приложения №2 к договору по телефонии на 626-е , new Date()
+      datePrilDogTel642: formatDate.one2one(o.DatePrDTelRssOOO_642), // дата приложения №2 к договору по телефонии на 642-е
       numDogInet: o.NumDInetRssOOO, // номер договора по интернет
-      dateDogInet: formatDate1(o.DateDInetRssOOO), // дата договора по интерннет
+      dateDogInet: formatDate.one2one(o.DateDInetRssOOO), // дата договора по интерннет
 
       // fiz
       fzFioNotice: o.f_fio_notice, // (физ) ФИО в извещениях, например Петров М.П.

@@ -11,7 +11,6 @@ import ShowProgress from 'src/common/show-progress'
 import { ContextApp, ctx } from 'src/common/context-app'
 
 const withDataNumbers = (Component) => (props) => {
-  // eslint-disable-next-line
   const [contextApp, setContextApp] = useContext(ContextApp)
   const [data, setData] = useState(null)
   const mountedRef = useRef(true)
@@ -30,7 +29,8 @@ const withDataNumbers = (Component) => (props) => {
     } catch (error) {
       setError(error)
     }
-  }, [contextApp, setContextApp])
+    //eslint-disable-next-line react-hooks/exhaustive-deps
+  }, [])
 
   useEffect(() => {
     fetchData()

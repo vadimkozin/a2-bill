@@ -58,7 +58,7 @@ const ItemsList = ({
   heightUsed = 0,
   isCheckbox = false,
   isPagination = true,
-  isSwitchDense = true,
+  isSwitchDense = false,
   ...rest
 }) => {
   const classes = useStyles()

@@ -10,61 +10,25 @@ const addZeros = (number, digitsInNumber = 2) => {
   return `${number}`.padStart(digitsInNumber, `0`)
 }
 
-// форматривание дат: my:'October 2020' ymd:'2020-10-25' dmy:'25-10-2021'
+const az = addZeros
+
+// форматривание дат
 export const formatDate = {
-  // my: (date) => `${MONTHS[date.getMonth()]} ${date.getFullYear()}`,
   // 30-apr-2021 -> 2021-04-30
   ymd: (date) =>
-    `${date.getFullYear()}-${addZeros(date.getMonth() + 1)}-${addZeros(
-      date.getDate()
-    )}`,
+    `${date.getFullYear()}-${az(date.getMonth() + 1)}-${az(date.getDate())}`,
   // 30-apr-2021 -> 30-04-2021
-  dmy: (date, delimiter = '-') =>
-    `${addZeros(date.getDate())}${delimiter}${addZeros(
-      date.getMonth() + 1
-    )}${delimiter}${date.getFullYear()}`,
+  dmy: (date) =>
+    `${az(date.getDate())}-${az(date.getMonth() + 1)}-${date.getFullYear()}`,
   // 30-apr-2021 -> 20210430000000
   mysql: (date) =>
-    `${date.getFullYear()}${addZeros(date.getMonth() + 1)}${addZeros(
-      date.getDate()
-    )}000000`,
+    `${date.getFullYear()}${az(date.getMonth() + 1)}${az(date.getDate())}` +
+    '000000',
+  // as is
+  one2one: (date) => date,
 }
 
-export const formatDate__ = (date, delimiter = '/') => {
-  // 30 apr 2021 -> 30/04/2021
-  let dd = date.getDate()
-  if (dd < 10) dd = '0' + dd
-
-  let mm = date.getMonth() + 1
-  if (mm < 10) mm = '0' + mm
-
-  const yyyy = date.getFullYear()
-
-  return dd + delimiter + mm + delimiter + yyyy
-}
-
-export const formatDateSql = (date) => {
-  // 30-apr-2021 -> 20210430000000
-
-  if (!isDate(date)) {
-    return null
-  }
-  let dd = date.getDate()
-  if (dd < 10) dd = '0' + dd
-
-  let mm = date.getMonth() + 1
-  if (mm < 10) mm = '0' + mm
-
-  const yyyy = date.getFullYear()
-
-  return yyyy + mm + dd + '000000'
-}
-
-export const formatDate1 = (date) => {
-  return date
-}
-
-// подготовка введённого текста перед поиском с использованием регулярного выражения
+// подготовка введённого текста перед поиском
 const prepareReg = (str) => {
   const reChars = ['(', '\\', ')', '*', '.', '+', '[']
   let result = ''
@@ -109,6 +73,7 @@ const MONTHS = [
   'ноябрь',
   'декабрь',
 ]
+// 2021_07 -> июль 2021
 export const getPeriod = (yyyy_mm) => {
   const [year, month] = yyyy_mm.split('_')
   return `${MONTHS[+month - 1]} ${year}`
@@ -118,5 +83,3 @@ export const getPeriod = (yyyy_mm) => {
 export const uniqArray = (array) => {
   return Array.from(new Set(array))
 }
-
-

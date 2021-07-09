@@ -52,8 +52,7 @@ const FormEdit = () => {
         return (
           <FormCustomerMain
             isNewCustomer={false}
-            custId={cid}
-            data={customer}
+            customer={customer}
           />
         )
 
@@ -61,8 +60,7 @@ const FormEdit = () => {
         return (
           <FormPersonalMain
             isNewCustomer={false}
-            custId={cid}
-            data={customer}
+            customer={customer}
           />
         )
 

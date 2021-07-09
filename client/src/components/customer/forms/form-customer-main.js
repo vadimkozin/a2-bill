@@ -136,12 +136,12 @@ const useStyles = makeStyles((theme) => ({
 const FormCustomerMain = ({
   isNewCustomer = true,
   custType = 'u',
-  data = null,
+  customer = null,
 }) => {
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const [formValues, setFormValues] = useState(
-    isNewCustomer ? initialValues : data
+    isNewCustomer ? initialValues : customer
   )
   const [formErrors, setFormErrors] = useState({})
   const tarTel = isNewCustomer

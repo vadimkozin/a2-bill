@@ -1,7 +1,7 @@
 import React from 'react'
 import NumberTransfer from './number-transfer'
-import withDataCustomers from 'src/hocs/withDataCustomers'
+import withDataCustomersNumbers from 'src/hocs/withDataCustomersNumbers'
 
-const Wrapped = withDataCustomers(NumberTransfer)
+const Wrapped = withDataCustomersNumbers(NumberTransfer)
 
 export default () => <Wrapped />
