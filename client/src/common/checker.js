@@ -6,6 +6,7 @@ export const isYear = (year) => {
 
   if (test) {
     result.isOk = true
+    result.answer = ''
   } else {
     result.isOk = false
     result.answer = <p>Год '{year}' введён неверно. Год должен выглядеть так: 2021, 2022, ..</p>

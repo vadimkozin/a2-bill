@@ -2,7 +2,7 @@ const express = require('express')
 const config = require('config')
 const db = require('knex')(config.get('db_tariffs'))
 const tariffsRouter = express.Router()
-const errorHandler = require('../utils/errorHandler')
+const errorHandler = require('../utils/error-handler')
 
 // (GET) localhost:5000/api/tariffs
 tariffsRouter.route('/').get(async (req, res) => {

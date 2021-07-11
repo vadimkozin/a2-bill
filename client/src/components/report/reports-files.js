@@ -3,7 +3,10 @@ import Box from '@material-ui/core/Box'
 import { useParams } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 import ItemsList from 'src/common/items-list'
-import { getFilesAsync } from 'src/mock/storeMock'
+// import { getFilesAsync } from 'src/mock/storeMock'
+import { fetchReportFiles } from 'src/store/api-action'
+// import { fetchReportFiles, handleDownload } from 'src/store/api-action'
+
 import { getPeriod } from 'src/utils'
 import Loading from 'src/common/loading'
 import { REPORTS_FILES_TYPE } from 'src/types/types'
@@ -14,8 +17,13 @@ const fileParams = {
   key: 'name',
 }
 
-const download = (name) => (
-  <a href={name} download>
+const download = ({ name, year, month }) => (
+  <a
+    // onClick={handleDownload({ name, year, month })}
+    // href={`/api2/reports/${year}/${month}/${name}`}
+    href={`/reports/${name}`}
+    download
+  >
     скачать
   </a>
 )
@@ -25,26 +33,29 @@ const ReportsFiles = ({ params = fileParams }) => {
   const { year, month } = useParams()
   const [isLoading, setIsLoading] = useState(true)
   const [files, setFiles] = useState(null)
-  const mountedRef = useRef(true);
+  const mountedRef = useRef(true)
 
   const fetchData = useCallback(async () => {
     try {
-      const files = await getFilesAsync(year, month)
-      if (!mountedRef.current) return null;
+      // const files = await getFilesAsync(year, month)
+      const files = await fetchReportFiles(year, month)
+      if (!mountedRef.current) return null
 
-      files.forEach((file) => (file['download'] = download(file.name)))
+      files.forEach(
+        (file) =>
+          (file['download'] = download({ name: file.name, year, month }))
+      )
       console.log(`files::`, files)
       setFiles(files)
       setIsLoading(false)
-
     } catch (error) {
-      console.log(`error::`, error);
+      console.log(`error::`, error)
     }
   }, [mountedRef, year, month])
 
   useEffect(() => {
     fetchData()
-    
+
     return () => {
       mountedRef.current = false
     }

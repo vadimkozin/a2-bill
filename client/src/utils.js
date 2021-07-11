@@ -83,3 +83,9 @@ export const getPeriod = (yyyy_mm) => {
 export const uniqArray = (array) => {
   return Array.from(new Set(array))
 }
+
+// проверка 
+export const check = {
+  isYear: (year) => /^\d{4}$/.test(year),
+  isPeriod: (period) => /^\d{4}_\d{2}$/.test(period),
+}

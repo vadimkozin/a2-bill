@@ -5,6 +5,8 @@ const cors = require('cors')
 const customersRouter = require('./routes/customers')
 const numbersRouter = require('./routes/numbers')
 const tariffsRouter = require('./routes/tariffs')
+const reportsRouter = require('./routes/reports')
+
 
 const app = express()
 /**
@@ -20,7 +22,8 @@ const app = express()
  *
  * get:  reports
  * get:  reports/2021
- * get:  reports/2021/2021_05
+ * get:  reports/2021/2021_06
+ * get:  reports/2021/2021_06/2021_06.zip
  *
  */
 
@@ -28,6 +31,8 @@ const client = `${__dirname}/client`
 
 app.use(express.json({ extended: true }))
 app.use(express.static(path.join(client, 'build')))
+app.use('/reports', express.static(config.path_reports))
+
 app.use(express.urlencoded({ extended: true }))
 
 const myLogger = (req, res, next) => {
@@ -42,6 +47,7 @@ app.get('/abc', (req, res) => res.send('Hello World!'))
 app.use('/api/customers', customersRouter)
 app.use('/api/numbers', numbersRouter)
 app.use('/api/tariffs', tariffsRouter)
+app.use('/api/reports', reportsRouter)
 
 
 app.get('/*', function (req, res) {

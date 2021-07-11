@@ -1,6 +1,6 @@
-// api/reports/years:
+// api/reports:
 const years = ['2020', '2021', '2022']
-// api/reports/years/2021
+// api/reports/2021
 const months = [
   '2021_01',
   '2021_02',
@@ -25,7 +25,7 @@ const months = [
   '2022_03',
 ]
 
-// api/reports/years/2021/2021_05/files
+// api/reports/2021/2021_05
 const files = [
   {
     name: '2021_05.zip',
