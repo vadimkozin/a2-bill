@@ -18,7 +18,7 @@ reportsRouter.route('/').get(async (req, res) => {
       withFileTypes: true,
     })
     const files = result.filter((d) => d.isFile()).map((d) => d.name)
-    res.status(200).json(reportHelper.getYears({files}).sort())
+    res.status(200).json(reportHelper.getYears({ files }).sort())
   } catch (e) {
     errorHandler(res, e)
   }
@@ -32,12 +32,12 @@ reportsRouter.route('/:year').get(async (req, res) => {
       withFileTypes: true,
     })
     const files = result.filter((d) => d.isFile()).map((d) => d.name)
-    res.status(200).json(reportHelper.getMonths({files, year}))
+    const months = reportHelper.getMonths({ files, year })
+
+    if (months.length === 0) throw new Error(`Нет отчётов за ${year} год`)
+
+    res.status(200).json(reportHelper.getMonths({ files, year }))
   } catch (e) {
-    console.log(`e:`)
-    if (e.code === 'ENOENT') {
-      e.message = `Нет отчётов за год: ${year}`
-    }
     errorHandler(res, e)
   }
 })
@@ -51,7 +51,9 @@ reportsRouter.route('/:year/:month').get(async (req, res) => {
     })
 
     const files = result.filter((d) => d.isFile()).map((d) => d.name)
-    res.status(200).json(prepareFilesForSending(reportHelper.getFiles({files, month})))
+    res
+      .status(200)
+      .json(prepareFilesForSending(reportHelper.getFiles({ files, month })))
   } catch (e) {
     errorHandler(res, e)
   }
@@ -67,12 +69,7 @@ const getDescription = (file) => {
   return ''
 }
 
-const prepareFilesForSending = (files) => {
-  const arr = []
-  files.map((file) => {
-    arr.push({ name: file, desc: getDescription(file) })
-  })
-  return arr
-}
+const prepareFilesForSending = (files) =>
+  files.map((file) => ({ name: file, desc: getDescription(file) }))
 
 module.exports = reportsRouter

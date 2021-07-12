@@ -16,14 +16,20 @@ const az = addZeros
 export const formatDate = {
   // 30-apr-2021 -> 2021-04-30
   ymd: (date) =>
-    `${date.getFullYear()}-${az(date.getMonth() + 1)}-${az(date.getDate())}`,
+    isDate(date)
+      ? `${date.getFullYear()}-${az(date.getMonth() + 1)}-${az(date.getDate())}`
+      : null,
   // 30-apr-2021 -> 30-04-2021
   dmy: (date) =>
-    `${az(date.getDate())}-${az(date.getMonth() + 1)}-${date.getFullYear()}`,
+    isDate(date)
+      ? `${az(date.getDate())}-${az(date.getMonth() + 1)}-${date.getFullYear()}`
+      : null,
   // 30-apr-2021 -> 20210430000000
   mysql: (date) =>
-    `${date.getFullYear()}${az(date.getMonth() + 1)}${az(date.getDate())}` +
-    '000000',
+    isDate(date)
+      ? `${date.getFullYear()}${az(date.getMonth() + 1)}${az(date.getDate())}` +
+        '000000'
+      : null,
   // as is
   one2one: (date) => date,
 }
@@ -84,7 +90,7 @@ export const uniqArray = (array) => {
   return Array.from(new Set(array))
 }
 
-// проверка 
+// проверка
 export const check = {
   isYear: (year) => /^\d{4}$/.test(year),
   isPeriod: (period) => /^\d{4}_\d{2}$/.test(period),
