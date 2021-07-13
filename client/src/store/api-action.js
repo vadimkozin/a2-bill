@@ -1,21 +1,17 @@
+import { BACKEND_URL, TIMEOUT_MAX } from 'src/const'
 import {
   customerAdapter,
   numberAdapter,
   tariffAdapter,
-  // reportAdapter,
 } from 'src/store/adapters'
 
-// const BACKEND_URL = `http://localhost:5000/api/`
-const BACKEND_URL = `http://192.168.1.218:5000/api/`
-
-const TIMEOUT_MAX = 1000 * 5
-
+// get
 const fetchList = async (what, adapter = null, id = null) => {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), TIMEOUT_MAX)
 
   try {
-    let url = `${BACKEND_URL}${what}`
+    let url = `${BACKEND_URL}/${what}`
     if (id) url += `/${id}`
 
     const response = await fetch(url, { signal: controller.signal })
@@ -44,9 +40,40 @@ export const fetchReportMonths = (year) => fetchList(`reports/${year}`)
 export const fetchReportFiles = (year, period) =>
   fetchList(`reports/${year}/${period}`)
 
-export const handleDownload =
-  ({ name, year, month }) =>
-  (event) => {
-    event.preventDefault()
-    console.log(name, year, month)
+// put:
+const update = async (what, item) => {
+  const controller = new AbortController()
+  setTimeout(() => controller.abort(), TIMEOUT_MAX)
+
+  try {
+    const url = `${BACKEND_URL}/${what}`
+
+    const response = await fetch(url, {
+      method: 'PUT',
+      headers: {
+        'Content-Type': 'application/json;charset=utf-8',
+      },
+      signal: controller.signal,
+      body: JSON.stringify(item),
+    })
+
+    console.log(`response:`, response)
+
+    if (response.ok) {
+      const items = await response.json()
+      return items
+    } else {
+      const err = await response.json()
+      throw err
+    }
+  } catch (err) {
+    if (err.name === 'AbortError') {
+      err.ecode = err.name
+    }
+    throw err
   }
+}
+
+// numbers/transfer/6261001
+export const transferNumber = (info) =>
+  update(`numbers/transfer/${info.number}`, info)

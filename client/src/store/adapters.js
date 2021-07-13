@@ -1,6 +1,4 @@
-// import { formatDate, formatDateSql, formatDate1 } from '../utils'
-import { formatDate } from '../utils'
-
+import { formatDate } from 'src/utils'
 import { tariffsTelList } from './tariffs'
 
 const getYN = (bool) => (bool === true ? 'Y' : 'N')

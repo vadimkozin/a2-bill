@@ -13,6 +13,8 @@ import ButtonsCancelSave from 'src/common/buttons-cancel-save'
 import { hints, obtainError, parameters } from 'src/common/helper-form'
 import { ContextApp, ctx } from 'src/common/context-app'
 
+import { transferNumber } from 'src/store/api-action'
+
 const initialValues = {
   customer: null, // клиент, арендующий номер с даты: dateOn
   dateOn: null, // дата начала аренды номера
@@ -22,7 +24,7 @@ const initialValues = {
 const schema = yup.object().shape({
   customer: yup.object,
   dateOn: yup.date(),
-  comment: yup.string().min(5, hints.min).max(50, hints.max).required(),
+  comment: yup.string().min(5, hints.min).max(150, hints.max).required(),
 })
 
 const useStyles = makeStyles((theme) => ({
@@ -131,8 +133,20 @@ const NumberTransfer = () => {
     navigate('..')
   }
 
-  const handleSave = (e) => {
-    console.log(`data:`, formValues)
+  const handleSave = async (e) => {
+    // console.log(`data:`, formValues)
+    const {
+      comment,
+      customer: { custId },
+      dateOn,
+    } = formValues
+
+    console.log(
+      `number: ${number}, comment:${comment}, custId:${custId}, dateOn:${dateOn}`
+    )
+    // Save({number, custId, comment, dateOn})
+    const response = await transferNumber({number, custId, comment, dateOn})
+    console.log(`response:`, response)
   }
 
   const getButtons = () => {
