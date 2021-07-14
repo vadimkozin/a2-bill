@@ -4,15 +4,9 @@ const db = require('knex')(config.get('db_numbers'))
 const db_cust = require('knex')(config.get('db_customers'))
 const numberTransferRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
-const { log, createMysqlDate, subtractDay } = require('./helper')
+const { log, createMysqlDate, subtractDay, Table } = require('./helper')
 
-const Table = {
-  CUSTOMERS: 'customers.Cust',
-  PERSONS: 'customers.CustKS',
-  HISTORY: 'telefon.history_test_',
-  NUMBERS: 'telefon.tel_test_',
-  NUMBERS_A2: 'telefon.q1000a2',
-}
+
 /**
  * смена арендатора номера number
  * новый владелец из body: {number, custId, comment, dateOn}
@@ -61,7 +55,7 @@ numberTransferRouter.route('/:number').put(async (req, res) => {
     })
     console.log(`updated:`, updated)
 
-    res.send(req.params.number)
+    res.send(updated === 1 ? true : false)
   } catch (e) {
     errorHandler(res, e)
   }

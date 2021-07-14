@@ -1,3 +1,11 @@
+const Table = {
+  CUSTOMERS: 'customers.Cust',
+  PERSONS: 'customers.CustKS',
+  HISTORY: 'telefon.history_test_',
+  NUMBERS: 'telefon.tel_test_',
+  NUMBERS_A2: 'telefon.q1000a2',
+}
+
 const log = (data) => {
   const { bindings, sql } = data
   let i = 0
@@ -25,5 +33,6 @@ const createMysqlDate = (date) => {
 module.exports = {
   log,
   subtractDay,
-  createMysqlDate
+  createMysqlDate,
+  Table,
 }

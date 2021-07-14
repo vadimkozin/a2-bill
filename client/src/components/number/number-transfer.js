@@ -12,7 +12,6 @@ import DatePicker from 'src/common/date-picker'
 import ButtonsCancelSave from 'src/common/buttons-cancel-save'
 import { hints, obtainError, parameters } from 'src/common/helper-form'
 import { ContextApp, ctx } from 'src/common/context-app'
-
 import { transferNumber } from 'src/store/api-action'
 
 const initialValues = {
@@ -55,6 +54,8 @@ const NumberTransfer = () => {
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
 
+  const [saving, setSaving] = useState(false)
+
   const { number } = useParams()
   const info = ctx.getNumberInfo(contextApp, number)
 
@@ -79,6 +80,27 @@ const NumberTransfer = () => {
       setFormErrors({ ...formErrors, [name]: '' })
     } catch (error) {
       setFormErrors({ ...formErrors, [name]: error.message })
+    }
+  }
+
+  const handleCancel = (e) => {
+    navigate('..')
+  }
+
+  const handleSave = async (e) => {
+    const {
+      comment,
+      customer: { custId },
+      dateOn,
+    } = formValues
+
+    setSaving(true)
+    const ok = await transferNumber({ number, custId, comment, dateOn })
+    setSaving(false)
+
+    if (ok) {
+      ctx.transferNumber(contextApp, { number, custId, comment, dateOn })
+      navigate('..')
     }
   }
 
@@ -129,26 +151,6 @@ const NumberTransfer = () => {
     )
   }
 
-  const handleCancel = (e) => {
-    navigate('..')
-  }
-
-  const handleSave = async (e) => {
-    // console.log(`data:`, formValues)
-    const {
-      comment,
-      customer: { custId },
-      dateOn,
-    } = formValues
-
-    console.log(
-      `number: ${number}, comment:${comment}, custId:${custId}, dateOn:${dateOn}`
-    )
-    // Save({number, custId, comment, dateOn})
-    const response = await transferNumber({number, custId, comment, dateOn})
-    console.log(`response:`, response)
-  }
-
   const getButtons = () => {
     return (
       <ButtonsCancelSave
@@ -156,7 +158,7 @@ const NumberTransfer = () => {
         textSave='Сохранить'
         handleCancel={handleCancel}
         handleSave={handleSave}
-        disabledSave={!isValid}
+        disabledSave={!isValid || saving}
       />
     )
   }

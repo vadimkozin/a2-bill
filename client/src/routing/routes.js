@@ -5,14 +5,12 @@ import DashboardLayout from 'src/layouts/dashboard-layout/dashboard-layout'
 import Home from 'src/components/home/home'
 import Tariffs from 'src/components/tariff/tariffs-wrap'
 import Numbers from 'src/components/number/numbers-wrap'
-// import NumberTransfer from 'src/components/number/number-transfer'
 import NumberTransfer from 'src/components/number/number-transfer-wrap'
-
 import Reports from 'src/components/report/reports'
 import ReportsMonths from 'src/components/report/reports-months'
 import ReportsFiles from 'src/components/report/reports-files'
 import Login from 'src/components/login/login'
-import NotFound from 'src/components/blank/blank'
+import NotFound from 'src/components/not-found/not-found'
 import Customers from 'src/components/customer/customer-main/customers-wrap'
 import CustomerAdd from 'src/components/customer/forms/form-add'
 import CustomerEdit from 'src/components/customer/forms/form-edit'
@@ -38,7 +36,7 @@ const routes = [
     children: [
       { path: 'login', element: <Login /> },
       { path: 'logout', element: <Login action={'logout'}/> },
-      { path: '404', element: <NotFound text={'NOT FOUND'} /> },
+      { path: '404', element: <NotFound /> },
       { path: '/', element: <Navigate to='/app/home' /> },
       { path: '*', element: <Navigate to='/404' /> },
     ],
@@ -63,7 +61,7 @@ const routes = [
         element: <Outlet />,
         children: [
           { path: '/', element: <Numbers /> },
-          // { path: 'transfer', element: <Navigate to='..' replace={true} /> },
+          { path: 'transfer', element: <Navigate to='..' replace={true} /> },
           { path: 'transfer/:number', element: <NumberTransfer /> },
         ],
       },
