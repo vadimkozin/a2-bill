@@ -1,9 +1,12 @@
-const Table = {
+const TableDb = {
   CUSTOMERS: 'customers.Cust',
+  CUSTOMERS_TEST: 'customers.Cust_test_',
   PERSONS: 'customers.CustKS',
   HISTORY: 'telefon.history_test_',
   NUMBERS: 'telefon.tel_test_',
   NUMBERS_A2: 'telefon.q1000a2',
+  TARIFFS: 'tarif.mtsTar',
+  PHONE_CODE: 'tarif.komstarCode',
 }
 
 const log = (data) => {
@@ -34,5 +37,5 @@ module.exports = {
   log,
   subtractDay,
   createMysqlDate,
-  Table,
+  TableDb,
 }

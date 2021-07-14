@@ -3,12 +3,13 @@ const config = require('config')
 const db = require('knex')(config.get('db_tariffs'))
 const tariffsRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
+const { log, TableDb } = require('./helper')
 
 // (GET) localhost:5000/api/tariffs
 tariffsRouter.route('/').get(async (req, res) => {
   try {
-    const tariffs = await db('mtsTar AS t')
-      .join('komstarCode AS c', 't.nid', '=', 'c.nid')
+    const tariffs = await db(`${TableDb.TARIFFS} AS t`) // mtsTar AS t
+      .join(`${TableDb.PHONE_CODE} AS c`, 't.nid', '=', 'c.nid') // komstarCode AS c
       .select(
         't.tid',
         't.nid',
@@ -18,6 +19,7 @@ tariffsRouter.route('/').get(async (req, res) => {
         db.raw('round(t.tar/c.tar,2) AS kf')
       )
       .orderBy('c.name')
+      .on('query', (data) => log(data))
 
     res.status(200).json(tariffs)
   } catch (e) {
@@ -31,7 +33,7 @@ tariffsRouter.route('/:tarId').get(async (req, res) => {
   const { tarId } = req.params
   try {
     const tariffs = await db('mtsTar AS t')
-      .join('komstarCode AS c', 't.nid', '=', 'c.nid')
+      .join(`${TableDb.PHONE_CODE} AS c`, 't.nid', '=', 'c.nid')
       .select(
         't.nid',
         'c.name',
@@ -41,6 +43,7 @@ tariffsRouter.route('/:tarId').get(async (req, res) => {
       )
       .where('t.tid', '=', tarId)
       .orderBy('c.name')
+      .on('query', (data) => log(data))
 
     res.status(200).json(tariffs)
   } catch (e) {

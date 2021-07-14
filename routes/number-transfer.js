@@ -4,7 +4,7 @@ const db = require('knex')(config.get('db_numbers'))
 const db_cust = require('knex')(config.get('db_customers'))
 const numberTransferRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
-const { log, createMysqlDate, subtractDay, Table } = require('./helper')
+const { log, createMysqlDate, subtractDay, TableDb } = require('./helper')
 
 
 /**
@@ -64,7 +64,7 @@ numberTransferRouter.route('/:number').put(async (req, res) => {
 const getCustomerType = async (custId) => {
   const result = await db_cust
     .first('CustType')
-    .from(Table.CUSTOMERS)
+    .from(TableDb.CUSTOMERS)
     .on('query', (data) => log(data))
     .where('CustID', '=', custId)
 
@@ -75,7 +75,7 @@ const getCustomerType = async (custId) => {
 const getPersonPid = async (custId) => {
   const result = await db_cust
     .first('pid')
-    .from(Table.PERSONS)
+    .from(TableDb.PERSONS)
     .on('query', (data) => log(data))
     .where('cid', '=', custId)
 
@@ -86,7 +86,7 @@ const getPersonPid = async (custId) => {
 const getCurrentOwner = async (number) => {
   const result = await db
     .first('cid', 'pid', 'd1')
-    .from(Table.NUMBERS)
+    .from(TableDb.NUMBERS)
     .on('query', (data) => log(data))
     .where('number', '=', number)
 
@@ -95,7 +95,7 @@ const getCurrentOwner = async (number) => {
 }
 
 const addHistory = async (data = { number, d1, d2, cid, pid, prim }) => {
-  const result = await db(Table.HISTORY)
+  const result = await db(TableDb.HISTORY)
     .insert(data)
     .on('query', (data) => log(data))
   return result
@@ -103,7 +103,7 @@ const addHistory = async (data = { number, d1, d2, cid, pid, prim }) => {
 
 // UPDATE telefon.tel SET cid=xxx, pid=XXX, d1=dateOn, PRIM=xxx WHERE number=NUMBER
 const updateNumber = async (number, data = { cid, pid, d1, PRIM }) => {
-  const result = await db(Table.NUMBERS)
+  const result = await db(TableDb.NUMBERS)
     .where('number', '=', number)
     .update(data)
     .on('query', (data) => log(data))

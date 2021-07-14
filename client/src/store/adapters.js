@@ -10,7 +10,7 @@ const getTariffItem = (tid) =>
 
 const getTariffId = (obj, key, subkey) => {
   const id = obj[key] && obj[key][subkey]
-  return id ? id : null
+  return id ? id : 0
 }
 
 export const customerAdapter = {
@@ -20,7 +20,7 @@ export const customerAdapter = {
 
   adaptToServerCustomer(o) {
     return {
-      id: o.custId,
+      // id: o.custId,
       CustID: o.custId,
       CustAlias: o.custAlias, // краткое название клиента
       CustName: o.custName, // полное название клиента

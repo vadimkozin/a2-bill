@@ -1,13 +1,14 @@
 import React, { useState } from 'react'
 import Box from '@material-ui/core/Box'
+import * as yup from 'yup'
+import { useNavigate } from 'react-router-dom'
 import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
-import * as yup from 'yup'
 import FormPersonal from './form-personal'
-import { tariffsTelList, tariffsInetList, TariffTel } from 'src/store/tariffs'
-import { hints, parameters } from 'src/common/helper-form'
 import { FORM_CUSTOMER_MAIN_TYPE } from 'src/types/types'
-import { useNavigate } from 'react-router-dom'
+import { hints, parameters } from 'src/common/helper-form'
+import { tariffsTelList, tariffsInetList, TariffTel } from 'src/store/tariffs'
+import { customerEdit } from 'src/store/api-action'
 
 const initialValues = {
   // basic
@@ -91,6 +92,7 @@ const FormPersonalMain = ({
     isNewCustomer ? initialValues : customer
   )
   const [formErrors, setFormErrors] = useState({})
+
   const tarTel = isNewCustomer
     ? tariffsTelList[TariffTel.FIZ]
     : formValues.tarTel
@@ -112,13 +114,19 @@ const FormPersonalMain = ({
     }
   }
 
-  const handleSave = () => {
+  const handleSave = async (e) => {
     console.log('Save ..')
     console.log(formValues)
+    const ok = await customerEdit(formValues)
+    if (ok) {
+        // ctx.transferNumber(contextApp, { number, custId, comment, dateOn })
+        navigate('/app/customers')
+      }  
+    
   }
 
   const handleCancel = () => {
-    navigate('/app/cust')
+    navigate('/app/customers')
   }
 
   return (

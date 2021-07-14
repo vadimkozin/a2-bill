@@ -77,3 +77,10 @@ const update = async (what, item) => {
 // numbers/transfer/6261001
 export const transferNumber = (info) =>
   update(`numbers/transfer/${info.number}`, info)
+
+// customers/edit/42
+export const customerEdit = (customer) => {
+  const data = customerAdapter.adaptToServerCustomer(customer)
+  console.log(`data:`, data)
+  return update(`customers/edit/${customer.custId}`, data)
+}
