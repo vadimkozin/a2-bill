@@ -1,14 +1,13 @@
 import React, { useContext } from 'react'
 import Typography from '@material-ui/core/Typography'
-import { ContextApp } from 'src/common/context-app'
+import { MainContext } from 'src/context/main-context'
 
 const AppHeader = () => {
-  // eslint-disable-next-line
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const main = useContext(MainContext)
 
   return (
     <Typography variant='h4' noWrap>
-      {contextApp && contextApp.title}
+      {main.title}
     </Typography>
   )
 }

@@ -9,7 +9,7 @@ export const appInit = {
   tariffs: null,
 }
 
-export const ContextApp = React.createContext(appInit)
+export const AppContext = React.createContext(appInit)
 
 export const ctx = {
   isCustomers: (context) => isExist(context, 'customers'),

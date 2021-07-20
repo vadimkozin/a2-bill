@@ -1,5 +1,5 @@
 import * as yup from 'yup'
-import React, { useState, useContext } from 'react'
+import React, { useState, useContext, useEffect } from 'react'
 import Paper from '@material-ui/core/Paper'
 import { useParams } from 'react-router-dom'
 import { useNavigate } from 'react-router-dom'
@@ -11,7 +11,7 @@ import MySelect from 'src/common/select'
 import DatePicker from 'src/common/date-picker'
 import ButtonsCancelSave from 'src/common/buttons-cancel-save'
 import { hints, obtainError, parameters } from 'src/common/helper-form'
-import { ContextApp, ctx } from 'src/common/context-app'
+import { MainContext } from 'src/context/main-context'
 import { transferNumber } from 'src/store/api-action'
 
 const initialValues = {
@@ -46,18 +46,20 @@ const useStyles = makeStyles((theme) => ({
 }))
 
 const NumberTransfer = () => {
-  // eslint-disable-next-line
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const main = useContext(MainContext)
   const classes = useStyles()
   const navigate = useNavigate()
 
+  const [numberInfo, setNumberInfo] = useState(null)
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
-
   const [saving, setSaving] = useState(false)
 
   const { number } = useParams()
-  const info = ctx.getNumberInfo(contextApp, number)
+
+  useEffect(() => {
+    setNumberInfo(main.getNumberInfo(number))
+  }, [number, main])
 
   const isValid =
     formValues.customer &&
@@ -94,13 +96,16 @@ const NumberTransfer = () => {
       dateOn,
     } = formValues
 
-    setSaving(true)
-    const ok = await transferNumber({ number, custId, comment, dateOn })
-    setSaving(false)
-
-    if (ok) {
-      ctx.transferNumber(contextApp, { number, custId, comment, dateOn })
+    try {
+      setSaving(true)
+      const ok = await transferNumber({ number, custId, comment, dateOn })
+      if (ok) {
+        main.transferNumber({ number, custId, comment, dateOn })
+      }
+      setSaving(false)
       navigate('..')
+    } catch (error) {
+      console.log(error)
     }
   }
 
@@ -108,7 +113,7 @@ const NumberTransfer = () => {
     return (
       <MySelect
         name='customer'
-        options={ctx.getCustomersList(contextApp)}
+        options={main.getCustomersList()}
         option_label='custAlias'
         option_value='custId'
         value={formValues.customer}
@@ -180,7 +185,10 @@ const NumberTransfer = () => {
             <tr>
               <td>сейчас</td>
               <td>
-                {info.custName}({info.custId}) с {info.dateOn}
+                {/* {numberInfo.custName}({numberInfo.custId}) с {numberInfo.dateOn} */}
+                {numberInfo
+                  ? `${numberInfo.custName} (${numberInfo.custId}) c ${numberInfo.dateOn}`
+                  : null}
               </td>
             </tr>
             <tr>

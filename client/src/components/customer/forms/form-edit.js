@@ -11,14 +11,14 @@ import FormCustomerMain from 'src/components/customer/forms/form-customer-main'
 import FormPersonalMain from 'src/components/customer/forms/form-personal-main'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { ContextApp, ctx } from 'src/common/context-app'
+import { AppContext, ctx } from 'src/context/app-context'
 
 const getCustomer = (customers, custId) =>
   customers.find((cust) => String(cust.custId) === String(custId))
 
 const FormEdit = () => {
   // eslint-disable-next-line
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const [contextApp, setContextApp] = useContext(AppContext)
   const { cid } = useParams()
   const [customer, setCustomer] = useState(null)
   const [error, setError] = useState(null)

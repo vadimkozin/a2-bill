@@ -5,7 +5,7 @@ import {
   tariffAdapter,
 } from 'src/store/adapters'
 
-// get
+// GET:
 const fetchList = async (what, adapter = null, id = null) => {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), TIMEOUT_MAX)
@@ -40,8 +40,8 @@ export const fetchReportMonths = (year) => fetchList(`reports/${year}`)
 export const fetchReportFiles = (year, period) =>
   fetchList(`reports/${year}/${period}`)
 
-// put:
-const update = async (what, item) => {
+// PUT:
+const update = async (what, item, method='PUT') => {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), TIMEOUT_MAX)
 
@@ -49,7 +49,7 @@ const update = async (what, item) => {
     const url = `${BACKEND_URL}/${what}`
 
     const response = await fetch(url, {
-      method: 'PUT',
+      method,
       headers: {
         'Content-Type': 'application/json;charset=utf-8',
       },
@@ -74,13 +74,16 @@ const update = async (what, item) => {
   }
 }
 
-// numbers/transfer/6261001
+// /api/numbers/transfer/6261001
 export const transferNumber = (info) =>
   update(`numbers/transfer/${info.number}`, info)
 
-// customers/edit/42
+// /api/customers/edit/42
 export const customerEdit = (customer) => {
   const data = customerAdapter.adaptToServerCustomer(customer)
   console.log(`data:`, data)
   return update(`customers/edit/${customer.custId}`, data)
 }
+
+// /api/auth/login
+export const login = (info) => update(`auth/login`, info, 'POST')

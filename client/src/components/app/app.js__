@@ -1,0 +1,80 @@
+import React from 'react'
+import { useRoutes } from 'react-router-dom'
+import { ThemeProvider } from '@material-ui/core'
+import CssBaseline from '@material-ui/core/CssBaseline'
+import theme from 'src/theme'
+import routes from 'src/routing/routes'
+// import routesLogin from 'src/routing/routes-login'
+import { AuthContext } from 'src/context/auth-context'
+import { MainContext } from 'src/context/main-context'
+import { useAuth } from 'src/hooks/auth.hook'
+import { useMain } from 'src/hooks/main.hook'
+import Loading from 'src/common/loading'
+import AppProvider from './app-provider'
+
+const App = () => {
+  const {
+    customers,
+    numbers,
+    tariffs,
+    title,
+    saveCustomers,
+    saveNumbers,
+    saveTariffs,
+    saveTitle,
+    reset,
+    isCustomers,
+    isNumbers,
+    isTariffs,
+    transferNumber,
+    getNumberInfo,
+    getCustomersList,
+  } = useMain()
+
+  const { token, userId, login, logout, ready, userName } = useAuth()
+  const isAuthenticated = !!token
+  const routing = useRoutes(routes)
+  // const login = useRoutes(routesLogin)
+
+  console.log(`isAuthenticated:`, isAuthenticated)
+  console.log(`AUTH:`, { userId, ready, userName })
+  console.log(`MAIN:`, { customers, numbers, tariffs, title })
+
+  if (!ready) {
+    return <Loading />
+  }
+
+  return (
+    <ThemeProvider theme={theme}>
+      <MainContext.Provider
+        value={{
+          customers,
+          numbers,
+          tariffs,
+          title,
+          saveCustomers,
+          saveNumbers,
+          saveTariffs,
+          saveTitle,
+          reset,
+          isCustomers,
+          isNumbers,
+          isTariffs,
+          transferNumber,
+          getNumberInfo,
+          getCustomersList,
+        }}
+      >
+          <AuthContext.Provider
+            value={{ token, login, logout, userId, userName, isAuthenticated }}
+          >
+            <CssBaseline />
+            {/* {isAuthenticated ? routing : login} */}
+            {routing}
+          </AuthContext.Provider>
+      </MainContext.Provider>
+    </ThemeProvider>
+  )
+}
+
+export default App

@@ -1,26 +1,33 @@
-import React, { useState, useContext, useEffect } from 'react'
+import React, { useState, useContext } from 'react'
 import * as yup from 'yup'
-import { useNavigate } from 'react-router-dom'
+import Box from '@material-ui/core/Box'
 import Paper from '@material-ui/core/Paper'
+import Button from '@material-ui/core/Button'
+import { useNavigate } from 'react-router-dom'
 import TextField from '@material-ui/core/TextField'
 import Container from '@material-ui/core/Container'
 import Typography from '@material-ui/core/Typography'
-import Button from '@material-ui/core/Button'
-import Box from '@material-ui/core/Box'
 import { makeStyles } from '@material-ui/core/styles'
+import { login } from 'src/store/api-action'
+import ShowProgress from 'src/common/show-progress'
+import { AuthContext } from 'src/context/auth-context'
+import { MainContext } from 'src/context/main-context'
 import { hints, obtainError, parameters } from 'src/common/helper-form'
-import { ContextApp } from 'src/common/context-app'
-import { LOGIN_TYPE } from 'src/types/types'
 
 const initialValues = {
   login: 'vadim',
-  password: '12345678',
+  password: 'e0EmXDJ7aXuCqqeBO',
 }
 
 // const initialValues = {
 //   login: null,
 //   password: null,
 // }
+const ERRCODE_TO_MESSAGE_MAP = {
+  AbortError: 'Превышено время ожидания',
+  ERR_USER: 'Неверный логин или пароль, попробуйте еще раз',
+  ERR_PASS: 'Неверный логин или пароль, попробуйте еще раз',
+}
 
 const schema = yup.object().shape({
   login: yup.string().min(5, hints.min).max(20, hints.max).required(),
@@ -44,19 +51,16 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const isEntryOk = ({ login, password }) => {
-  return password === '12345678' ? true : false
-}
-
-const Login = ({ action = 'login' }) => {
-  // eslint-disable-next-line
-  const [contextApp, setContextApp] = useContext(ContextApp)
+const Login = () => {
+  const main = useContext(MainContext)
+  const auth = useContext(AuthContext)
   const classes = useStyles()
   const navigate = useNavigate()
 
   const [formValues, setFormValues] = useState(initialValues)
   const [formErrors, setFormErrors] = useState({})
-  const [isLoginOk, setIsLoginOk] = useState(null)
+  const [isLoading, setIsLoading] = useState(null)
+  const [problem, setProblem] = useState('')
 
   const isValid =
     formValues.login &&
@@ -66,16 +70,10 @@ const Login = ({ action = 'login' }) => {
 
   const canBeError = (field) => obtainError(field, formErrors)
 
-  useEffect(() => {
-    if (action === 'logout') {
-      setContextApp((context) => ({ ...context, login: null }))
-    }
-  }, [action, setContextApp])
-
   const handleChange = async (e) => {
     const { name, value } = e.target
 
-    setIsLoginOk(true) // clearing the output of previous errors
+    setProblem('') // clearing the output of previous errors
 
     setFormValues((prev) => ({
       ...prev,
@@ -90,14 +88,23 @@ const Login = ({ action = 'login' }) => {
     }
   }
 
-  const handleSubmit = (e) => {
+  const handleSubmit = async (e) => {
     e.preventDefault()
-    console.log(`formValues:`, formValues)
-    const ok = isEntryOk({ ...formValues })
-    setIsLoginOk(ok)
-    if (ok) {
-      setContextApp((context) => ({ ...context, login: formValues.login }))
+    try {
+      setIsLoading(true)
+      setProblem('')
+      const ok = await login({ ...formValues })
+      // console.log(`ok:`, ok)
+      auth.login(ok.token, ok.userId, ok.userName)
+      main.saveTitle('A2 Billing')
+      setIsLoading(false)
       navigate('/')
+    } catch (e) {
+      setIsLoading(false)
+      if (e.ecode) {
+        setProblem(ERRCODE_TO_MESSAGE_MAP[e.ecode])
+      }
+      console.log(`e:`, e, `e.ecode:`, e.ecode, `err.name:`, e.name)
     }
   }
 
@@ -133,9 +140,8 @@ const Login = ({ action = 'login' }) => {
             {...canBeError('password')}
           />
           <Box mt={2}>
-            {isLoginOk !== null && isLoginOk === false ? (
-              <p className={classes.error}>Неверный логин или пароль</p>
-            ) : null}
+            {isLoading && <ShowProgress loading='' size={16} />}
+            {problem && <p className={classes.error}>{problem}</p>}
             <Button
               color='primary'
               disabled={!isValid}
@@ -153,5 +159,4 @@ const Login = ({ action = 'login' }) => {
   )
 }
 
-Login.propTypes = LOGIN_TYPE
 export default Login

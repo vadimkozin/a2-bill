@@ -8,8 +8,8 @@ const { log, TableDb } = require('./helper')
 // (GET) localhost:5000/api/tariffs
 tariffsRouter.route('/').get(async (req, res) => {
   try {
-    const tariffs = await db(`${TableDb.TARIFFS} AS t`) // mtsTar AS t
-      .join(`${TableDb.PHONE_CODE} AS c`, 't.nid', '=', 'c.nid') // komstarCode AS c
+    const tariffs = await db(`${TableDb.TARIFFS} AS t`)
+      .join(`${TableDb.PHONE_CODE} AS c`, 't.nid', '=', 'c.nid')
       .select(
         't.tid',
         't.nid',
@@ -32,7 +32,7 @@ tariffsRouter.route('/').get(async (req, res) => {
 tariffsRouter.route('/:tarId').get(async (req, res) => {
   const { tarId } = req.params
   try {
-    const tariffs = await db('mtsTar AS t')
+    const tariffs = await db(`${TableDb.TARIFFS} AS t`) // mtsTar as t
       .join(`${TableDb.PHONE_CODE} AS c`, 't.nid', '=', 'c.nid')
       .select(
         't.nid',

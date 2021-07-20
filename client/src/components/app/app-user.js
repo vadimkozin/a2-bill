@@ -1,14 +1,14 @@
-import React, { useContext } from 'react'
+import React from 'react'
 import Typography from '@material-ui/core/Typography'
-import { ContextApp } from 'src/common/context-app'
+import { useAuth } from 'src/hooks/auth.hook'
 
 const AppUser = () => {
-  // eslint-disable-next-line
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const {userId, userName} = useAuth()
 
   return (
     <Typography variant='h6' noWrap>
-      {contextApp && contextApp.login}
+      {userName && userName}
+      {userId && `(${userId})`}
     </Typography>
   )
 }

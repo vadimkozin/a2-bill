@@ -6,7 +6,7 @@ const customersRouter = require('./routes/customers')
 const numbersRouter = require('./routes/numbers')
 const tariffsRouter = require('./routes/tariffs')
 const reportsRouter = require('./routes/reports')
-
+const authRouter = require('./routes/auth')
 
 const app = express()
 /**
@@ -48,6 +48,8 @@ app.use('/api/customers', customersRouter)
 app.use('/api/numbers', numbersRouter)
 app.use('/api/tariffs', tariffsRouter)
 app.use('/api/reports', reportsRouter)
+app.use('/api/auth', authRouter)
+
 
 
 app.get('/*', function (req, res) {

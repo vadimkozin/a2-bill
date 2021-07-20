@@ -9,11 +9,11 @@ const useStyles = makeStyles((theme) => ({
   },
 }))
 
-const ShowProgress = () => {
+const ShowProgress = ({loading='loading...', size=24}) => {
   const classes = useStyles()
   return (
     <div className={classes.wrapper}>
-      <CProgress size={24} />
+      <CProgress size={size} loading={loading} />
     </div>
   )
 }

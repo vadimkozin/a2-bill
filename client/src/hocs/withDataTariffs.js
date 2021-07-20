@@ -8,23 +8,23 @@ import React, {
 import { fetchTariffs } from 'src/store/api-action'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { ContextApp, ctx } from 'src/common/context-app'
+import { MainContext } from 'src/context/main-context'
 
 const withDataTariffs = (Component) => (props) => {
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const main = useContext(MainContext)
   const [data, setData] = useState(null)
   const [error, setError] = useState(null)
   const mountedRef = useRef(true)
 
   const fetchData = useCallback(async () => {
     try {
-      if (ctx.isTariffs(contextApp)) {
-        setData(contextApp.tariffs)
-      } else {
+        if (main.isTariffs()) {
+          setData(main.tariffs)
+        } else {
         const tariffs = await fetchTariffs()
         if (!mountedRef.current) return null
         setData(tariffs)
-        setContextApp((context) => ({ ...context, tariffs }))
+        main.saveTariffs(tariffs)
       }
     } catch (error) {
       setError(error)

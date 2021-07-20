@@ -10,6 +10,7 @@ import Reports from 'src/components/report/reports'
 import ReportsMonths from 'src/components/report/reports-months'
 import ReportsFiles from 'src/components/report/reports-files'
 import Login from 'src/components/login/login'
+import Logout from 'src/components/logout/logout'
 import NotFound from 'src/components/not-found/not-found'
 import Customers from 'src/components/customer/customer-main/customers-wrap'
 import CustomerAdd from 'src/components/customer/forms/form-add'
@@ -17,6 +18,7 @@ import CustomerEdit from 'src/components/customer/forms/form-edit'
 import EnhancedTable from 'src/components/table/enhanced-table'
 
 /*
+  login                  - Login
   app/customers          - Customers
   app/customers/add      - CustomerAdd
   app/customers/edit/42  - CustomerEdit
@@ -35,7 +37,7 @@ const routes = [
     element: <MainLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      { path: 'logout', element: <Login action={'logout'}/> },
+      { path: 'logout', element: <Logout /> },
       { path: '404', element: <NotFound /> },
       { path: '/', element: <Navigate to='/app/home' /> },
       { path: '*', element: <Navigate to='/404' /> },

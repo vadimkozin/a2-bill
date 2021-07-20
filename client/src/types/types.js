@@ -195,7 +195,3 @@ export const TOOLBAR_SEARCH_TYPE = {
   params: shape(TOOLBAR_BUTTONS_TYPE),
   onSearch: func.isRequired,
 }
-
-export const LOGIN_TYPE = {
-  action: string
-}

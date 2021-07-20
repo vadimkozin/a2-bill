@@ -8,10 +8,10 @@ import React, {
 import { fetchCustomers, fetchNumbers } from 'src/store/api-action'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { ContextApp, ctx } from 'src/common/context-app'
+import { MainContext } from 'src/context/main-context'
 
 const withDataCustomersNumbers = (Component) => (props) => {
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const main = useContext(MainContext)
   const [customers, setCustomers] = useState(null)
   const [numbers, setNumbers] = useState(null)
   const [error, setError] = useState(null)
@@ -20,13 +20,13 @@ const withDataCustomersNumbers = (Component) => (props) => {
 
   const fetchData = useCallback(async () => {
     try {
-      if (ctx.isCustomers(contextApp)) {
-        setCustomers(contextApp.customers)
+      if (main.isCustomers()) {
+        setCustomers(main.customers)
       } else {
         const customers = await fetchCustomers()
         if (!mountedRef.current) return null
         setCustomers(customers)
-        setContextApp((context) => ({ ...context, customers }))
+        main.saveCustomers(customers)
       }
     } catch (error) {
       setError(error)
@@ -36,19 +36,19 @@ const withDataCustomersNumbers = (Component) => (props) => {
 
   const fetchData2 = useCallback(async () => {
     try {
-      if (ctx.isNumbers(contextApp)) {
-        setNumbers(contextApp.numbers)
+      if (main.isNumbers()) {
+        setNumbers(main.numbers)
       } else {
         const numbers = await fetchNumbers()
         if (!mountedRef2.current) return null
         setNumbers(numbers)
-        setContextApp((context) => ({ ...context, numbers }))
+        main.saveNumbers(numbers)
       }
     } catch (error) {
       setError(error)
     }
     //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []) 
+  }, [])
 
   useEffect(() => {
     fetchData()
@@ -59,8 +59,6 @@ const withDataCustomersNumbers = (Component) => (props) => {
     fetchData2()
     return () => (mountedRef2.current = false)
   }, [fetchData2])
-
-
 
   if (error) {
     return <ShowError error={error} />

@@ -1,7 +1,6 @@
-import React, { useContext, useEffect } from 'react'
+import React from 'react'
 import { makeStyles } from '@material-ui/core/styles'
 import Typography from '@material-ui/core/Typography'
-import { ContextApp } from 'src/common/context-app'
 
 const useStyles = makeStyles((theme) => ({
   root: {},
@@ -10,13 +9,7 @@ const useStyles = makeStyles((theme) => ({
   }
 }))
 const Home = () => {
-  // eslint-disable-next-line
-  const [contextApp, setContextApp] = useContext(ContextApp)
   const classes = useStyles()
-
-  useEffect(() => {
-    setContextApp((context) => ({ ...context, title: null }))
-  }, [setContextApp])
 
   return (
     <>

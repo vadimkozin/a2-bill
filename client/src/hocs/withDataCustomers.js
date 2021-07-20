@@ -8,23 +8,23 @@ import React, {
 import { fetchCustomers } from 'src/store/api-action'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { ContextApp, ctx } from 'src/common/context-app'
+import { MainContext } from 'src/context/main-context'
 
 const withDataCustomers = (Component) => (props) => {
-  const [contextApp, setContextApp] = useContext(ContextApp)
+  const main = useContext(MainContext)
   const [data, setData] = useState(null)
   const mountedRef = useRef(true)
   const [error, setError] = useState(null)
 
   const fetchData = useCallback(async () => {
     try {
-      if (ctx.isCustomers(contextApp)) {
-        setData(contextApp.customers)
+      if (main.isCustomers()) {
+        setData(main.customers)
       } else {
         const customers = await fetchCustomers()
         if (!mountedRef.current) return null
         setData(customers)
-        setContextApp((context) => ({ ...context, customers }))
+        main.saveCustomers(customers)
       }
     } catch (error) {
       setError(error)
