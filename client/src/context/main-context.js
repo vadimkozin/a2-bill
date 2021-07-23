@@ -18,4 +18,6 @@ export const MainContext = createContext({
   transferNumber: noop,
   getNumberInfo: noop,
   getCustomersList: noop,
+  updateCustomer: noop,
+  addCustomer: noop,
 })

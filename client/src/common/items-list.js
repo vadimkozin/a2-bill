@@ -72,6 +72,7 @@ const ItemsList = ({
   }, [items])
 
   const handleLimitChange = (event) => {
+    console.log(event.target.value)
     setRowsPerPage(+event.target.value)
     setPage(0)
   }
@@ -109,7 +110,12 @@ const ItemsList = ({
           </TableHead>
           <TableBody>
             {items
-              .slice(rowsPerPage * page, rowsPerPage * (page + 1))
+              // .slice(rowsPerPage * page, rowsPerPage * (page + 1))
+              .slice(
+                rowsPerPage * page,
+                rowsPerPage === -1 ? items.length : rowsPerPage * (page + 1)
+              )
+
               .map((item) => {
                 const isItemSelected = isSelected(item[params.key])
                 return (

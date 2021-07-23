@@ -2,7 +2,7 @@ import React from 'react'
 import { MainContext } from 'src/context/main-context'
 import { useMain } from 'src/hooks/main.hook'
 
-const MainContextProvider = ({children}) => {
+const MainContextProvider = ({ children }) => {
   const {
     customers,
     numbers,
@@ -19,6 +19,8 @@ const MainContextProvider = ({children}) => {
     transferNumber,
     getNumberInfo,
     getCustomersList,
+    updateCustomer,
+    addCustomer,
   } = useMain()
 
   // console.log(`MAIN:`, { customers, numbers, tariffs, title })
@@ -41,6 +43,8 @@ const MainContextProvider = ({children}) => {
         transferNumber,
         getNumberInfo,
         getCustomersList,
+        updateCustomer,
+        addCustomer,
       }}
     >
       {children}

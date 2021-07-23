@@ -43,23 +43,42 @@ export const useMain = () => {
     [customers]
   )
 
+  // const transferNumber__ = useCallback(
+  //   ({ number, custId, comment, dateOn }) => {
+  //     const length = numbers.length
+  //     const customer = getCustomer(custId)
+
+  //     for (let i = 0; i < length; i++) {
+  //       if (String(numbers[i].number) === String(number)) {
+  //         numbers[i].custId = custId
+  //         // numbers[i].comment = comment
+  //         numbers[i].dateOn = formatDate.dmy(dateOn)
+  //         numbers[i].custName = customer ? customer.custAlias : '?'
+  //         break
+  //       }
+  //     }
+  //   },
+  //   [numbers, getCustomer]
+  // )
+
   const transferNumber = useCallback(
     ({ number, custId, comment, dateOn }) => {
-      const length = numbers.length
       const customer = getCustomer(custId)
 
-      for (let i = 0; i < length; i++) {
-        if (String(numbers[i].number) === String(number)) {
-          numbers[i].custId = custId
-          numbers[i].comment = comment
-          numbers[i].dateOn = formatDate.dmy(dateOn)
-          numbers[i].custName = customer ? customer.custAlias : '?'
-          break
-        }
+      const index = numbers.findIndex(
+        (it) => String(it.number) === String(number)
+      )
+
+      if (index > -1) {
+        numbers[index].custId = custId
+        // numbers[index].comment = comment
+        numbers[index].dateOn = formatDate.dmy(dateOn)
+        numbers[index].custName = customer ? customer.custAlias : '?'
       }
     },
     [numbers, getCustomer]
   )
+
 
   const getNumberInfo = useCallback(
     (number) => numbers.find((numb) => String(numb.number) === String(number)),
@@ -75,6 +94,26 @@ export const useMain = () => {
       custAlias: customer.custAlias,
     }))
   }, [customers])
+
+  const updateCustomer = useCallback(
+    (customer) => {
+      const index = customers.findIndex(
+        (it) => Number(it.custId) === Number(customer.custId)
+      )
+      // console.log(`custId: ${customer.custId}, index:${index}`)
+      const replaced = customers.splice(index, 1, customer)
+      // console.log(`replaced:`, replaced)
+      return replaced ? true : false
+    },
+    [customers]
+  )
+
+  const addCustomer = useCallback(
+    (customer, custId) => {
+      return customers.push({ ...customer, custId })
+    },
+    [customers]
+  )
 
   return {
     customers,
@@ -92,6 +131,8 @@ export const useMain = () => {
     transferNumber,
     getNumberInfo,
     getCustomersList,
+    updateCustomer,
+    addCustomer,
   }
 }
 

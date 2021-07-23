@@ -1,6 +1,19 @@
 // import {shape, exact, func, number, bool, string, oneOf, oneOfType, instanceOf, array, arrayOf, object} from 'prop-types';
-import { arrayOf } from 'prop-types';
-import {element, shape, exact, func, bool, number, string, oneOfType, instanceOf, array, object, node} from 'prop-types';
+import { arrayOf } from 'prop-types'
+import {
+  element,
+  shape,
+  exact,
+  func,
+  bool,
+  number,
+  string,
+  oneOfType,
+  instanceOf,
+  array,
+  object,
+  node,
+} from 'prop-types'
 
 const dateOrNull = oneOfType([instanceOf(Date), () => null])
 const funcOrNull = oneOfType([func.isRequired, () => null])
@@ -8,7 +21,8 @@ const funcOrNull = oneOfType([func.isRequired, () => null])
 export const FORM_CUSTOMER_MAIN_TYPE = {
   isNewCustomer: bool.isRequired,
   custType: string,
-  customer: object
+  customer: object,
+  tarTel: object,
 }
 
 export const FORM_PERSONAL_TYPE = {
@@ -19,22 +33,22 @@ export const FORM_PERSONAL_TYPE = {
   parameters: object,
   formErrors: object,
   isNewCustomer: bool.isRequired,
-  values: object
+  values: object,
 }
 
 const CUSTOMER_BASIC_FIELDS = {
-  custAlias: string.isRequired, 
-  custName: string.isRequired, 
-  custType: string.isRequired, 
-  addressU: string, 
-  addressP: string, 
-  contactTel: string, 
-  contactEmail: string, 
-  isTel: bool.isRequired, 
-  isInet: bool.isRequired, 
-  isAct: bool.isRequired, 
-  tarTel: object, 
-  tarInet: object
+  custAlias: string.isRequired,
+  custName: string.isRequired,
+  custType: string.isRequired,
+  addressU: string,
+  addressP: string,
+  contactTel: string,
+  contactEmail: string,
+  isTel: bool.isRequired,
+  isInet: bool.isRequired,
+  isAct: bool.isRequired,
+  tarTel: object,
+  tarInet: object,
 }
 export const FORM_CUSTOMER_BASIC_TYPE = {
   handleNext: func.isRequired,
@@ -48,13 +62,13 @@ export const FORM_CUSTOMER_BASIC_TYPE = {
 }
 
 const CUSTOMERS_DOGOVOR_FIELDS = {
-  numDogTelAbon: string, 
-  dateDogTelAbon: dateOrNull, 
-  numDogTelMts: string, 
+  numDogTelAbon: string,
+  dateDogTelAbon: dateOrNull,
+  numDogTelMts: string,
   dateDogTelMts: dateOrNull,
   datePrilDogTel: dateOrNull,
   datePrilDogTel642: dateOrNull,
-  numDogInet: string, 
+  numDogInet: string,
   dateDogInet: dateOrNull,
 }
 export const FORM_CUSTOMER_DOGOVOR_TYPE = {
@@ -67,13 +81,13 @@ export const FORM_CUSTOMER_DOGOVOR_TYPE = {
 }
 
 const CUSTOMERS_BANK_FIELDS = {
-  bankName: string, 
-  bankAccount: string, 
-  bankKAccount: string, 
-  bankBik: string, 
-  bankInn: string, 
-  bankKpp: string, 
-  bankOkpo: string
+  bankName: string,
+  bankAccount: string,
+  bankKAccount: string,
+  bankBik: string,
+  bankInn: string,
+  bankKpp: string,
+  bankOkpo: string,
 }
 export const FORM_CUSTOMER_BANK_TYPE = {
   handleNext: func.isRequired,
@@ -87,7 +101,7 @@ export const FORM_CUSTOMER_BANK_TYPE = {
 export const BOTTON_MORE_TYPE = {
   text: string.isRequired,
   disabled: bool.isRequired,
-  onClick: funcOrNull
+  onClick: funcOrNull,
 }
 
 export const BOTTONS_NEXTPREV_TYPE = {
@@ -121,7 +135,7 @@ export const DATE_PICKER_TYPE = {
   label: string.isRequired,
   value: dateOrNull,
   handleChange: func.isRequired,
-  variant: string
+  variant: string,
 }
 
 export const SELECT_TYPE = {
@@ -136,13 +150,13 @@ export const SELECT_TYPE = {
 
 export const PAGE_TYPE = {
   children: node.isRequired,
-  title: string
+  title: string,
 }
 
 export const CUSTOMER_LIST_TYPE = {
   className: string,
   customers: array.isRequired,
-  onSelected: func.isRequired
+  onSelected: func.isRequired,
 }
 
 export const TARIFF_LIST_TYPE = {
@@ -150,10 +164,10 @@ export const TARIFF_LIST_TYPE = {
   tariffs: array.isRequired,
 }
 const LIST_PARAMS_TYPE = {
-  headers: arrayOf(string).isRequired,  // заголовки колонок
-  fields: arrayOf(string).isRequired,   // поля для отображения, fields.length === headers.length
-  searchs: arrayOf(string),             // поля для поиска, searchs.length <== fields.length
-  key: string.isRequired                // уникальный ключ из fields
+  headers: arrayOf(string).isRequired, // заголовки колонок
+  fields: arrayOf(string).isRequired, // поля для отображения, fields.length === headers.length
+  searchs: arrayOf(string), // поля для поиска, searchs.length <== fields.length
+  key: string.isRequired, // уникальный ключ из fields
 }
 
 export const ITEMS_LIST_TYPE = {
@@ -164,7 +178,7 @@ export const ITEMS_LIST_TYPE = {
   heightUsed: number,
   isCheckbox: bool,
   isPagination: bool,
-  isSwitchDense: bool
+  isSwitchDense: bool,
 }
 
 export const NUMBERS_TYPE = {
@@ -173,7 +187,7 @@ export const NUMBERS_TYPE = {
 }
 
 export const REPORTS_FILES_TYPE = {
-  params: shape(LIST_PARAMS_TYPE)
+  params: shape(LIST_PARAMS_TYPE),
 }
 
 const TOOLBAR_BUTTON_TYPE = {
@@ -187,7 +201,7 @@ const TOOLBAR_BUTTON_TYPE = {
   tooltipDisabled: string,
 }
 const TOOLBAR_BUTTONS_TYPE = {
-  buttons: arrayOf(shape(TOOLBAR_BUTTON_TYPE))
+  buttons: arrayOf(shape(TOOLBAR_BUTTON_TYPE)),
 }
 export const TOOLBAR_SEARCH_TYPE = {
   title: string,

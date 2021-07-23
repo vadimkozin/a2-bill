@@ -1,5 +1,4 @@
 import React, { Fragment } from 'react'
-import { useNavigate } from 'react-router-dom'
 import Table from '@material-ui/core/Table'
 import Paper from '@material-ui/core/Paper'
 import TableRow from '@material-ui/core/TableRow'
@@ -9,7 +8,6 @@ import TableHead from '@material-ui/core/TableHead'
 import { makeStyles } from '@material-ui/core/styles'
 import TableContainer from '@material-ui/core/TableContainer'
 import { isDate, formatDate, isObject } from 'src/utils'
-import { customerAdapter } from 'src/store/adapters'
 import ButtonsCancelSavePrev from 'src/common/button-cancel-save-prev'
 
 const useStyles = makeStyles({
@@ -19,35 +17,29 @@ const useStyles = makeStyles({
   },
 })
 
-const Confirm = ({ handleNext, handleBack, values, schema }) => {
+
+
+const Confirm = ({ handleBack, handleSave, handleCancel, values, schema }) => {
   const classes = useStyles()
-  const navigate = useNavigate()
 
   const handleSubmit = () => {
-    console.log(values)
-    handleNext()
-  }
-
-  const handleCancel = () => {
-    navigate('/app/cust')
+    handleSave(values)
   }
 
   const print = (key, value) => {
     if (isDate(value)) {
-      return formatDate(value)
+      return formatDate.dmy(value)
     }
-
+  
     if (isObject(value)) {
       const id = schema.fields[key].id
+
+      console.log(`id:`, id, `, val:`, value[id])
       return id ? `${id}=${value[id]}` : null
     }
-
+  
     return String(value)
   }
-
-  console.log(`confirm.values:`, values)
-  console.log(`adaptToServer:`, customerAdapter.adaptToServerCustomer(values))
-
   return (
     <Fragment>
       <TableContainer component={Paper}>

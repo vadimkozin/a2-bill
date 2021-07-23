@@ -48,10 +48,10 @@ const FormEdit = () => {
   const go = (custType) => {
     switch (custType) {
       case 'u':
-        return <FormCustomerMain isNewCustomer={false} customer={customer} />
+        return <FormCustomerMain isNewCustomer={false} customer={customer} tarTel={customer.tarTel}/>
 
       case 'f':
-        return <FormPersonalMain isNewCustomer={false} customer={customer} />
+        return <FormPersonalMain isNewCustomer={false} customer={customer} tarTel={customer.tarTel} />
 
       default:
         return (

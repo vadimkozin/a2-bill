@@ -40,7 +40,7 @@ export const fetchReportMonths = (year) => fetchList(`reports/${year}`)
 export const fetchReportFiles = (year, period) =>
   fetchList(`reports/${year}/${period}`)
 
-// PUT:
+// PUT/POST:
 const update = async (what, item, method='PUT') => {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), TIMEOUT_MAX)
@@ -57,7 +57,7 @@ const update = async (what, item, method='PUT') => {
       body: JSON.stringify(item),
     })
 
-    console.log(`response:`, response)
+    // console.log(`response:`, response)
 
     if (response.ok) {
       const items = await response.json()
@@ -79,10 +79,17 @@ export const transferNumber = (info) =>
   update(`numbers/transfer/${info.number}`, info)
 
 // /api/customers/edit/42
-export const customerEdit = (customer) => {
+export const updateCustomer = (customer) => {
   const data = customerAdapter.adaptToServerCustomer(customer)
-  console.log(`data:`, data)
+  // console.log(`data:`, data)
   return update(`customers/edit/${customer.custId}`, data)
+}
+
+// /api/customers/add
+export const addCustomer = (customer) => {
+  const data = customerAdapter.adaptToServerCustomer(customer)
+  // console.log(`add_data:`, data)
+  return update(`customers/add`, data, 'POST')
 }
 
 // /api/auth/login

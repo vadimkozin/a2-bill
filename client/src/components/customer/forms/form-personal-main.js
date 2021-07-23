@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Box from '@material-ui/core/Box'
 import * as yup from 'yup'
 import { useNavigate } from 'react-router-dom'
@@ -8,7 +8,8 @@ import FormPersonal from './form-personal'
 import { FORM_CUSTOMER_MAIN_TYPE } from 'src/types/types'
 import { hints, parameters } from 'src/common/helper-form'
 import { tariffsTelList, tariffsInetList, TariffTel } from 'src/store/tariffs'
-import { customerEdit } from 'src/store/api-action'
+import { updateCustomer, addCustomer } from 'src/store/api-action'
+import { MainContext } from 'src/context/main-context'
 
 const initialValues = {
   // basic
@@ -85,17 +86,15 @@ const FormPersonalMain = ({
   isNewCustomer = true,
   custType = 'f',
   customer = null,
+  tarTel = tariffsTelList[TariffTel.FIZ],
 }) => {
+  const main = useContext(MainContext)
   const classes = useStyles()
   const navigate = useNavigate()
   const [formValues, setFormValues] = useState(
-    isNewCustomer ? initialValues : customer
+    isNewCustomer ? { ...initialValues, custType, tarTel } : customer
   )
   const [formErrors, setFormErrors] = useState({})
-
-  const tarTel = isNewCustomer
-    ? tariffsTelList[TariffTel.FIZ]
-    : formValues.tarTel
 
   // изменения в полях формы
   const handleChange = async (e) => {
@@ -114,15 +113,20 @@ const FormPersonalMain = ({
     }
   }
 
-  const handleSave = async (e) => {
-    console.log('Save ..')
-    console.log(formValues)
-    const ok = await customerEdit(formValues)
-    if (ok) {
-        // ctx.transferNumber(contextApp, { number, custId, comment, dateOn })
-        navigate('/app/customers')
-      }  
-    
+  const handleSave = (data) => async (e) => {
+    e.preventDefault()
+    try {
+      if (isNewCustomer) {
+        const response = await addCustomer(data)
+        main.addCustomer(data, response.custId)
+      } else {
+        await updateCustomer(data)
+        main.updateCustomer(data)
+      }
+      navigate('/app/customers')
+    } catch (e) {
+      console.log('err:', e)
+    }
   }
 
   const handleCancel = () => {
@@ -147,7 +151,7 @@ const FormPersonalMain = ({
       </Box>
       <FormPersonal
         handleChange={handleChange}
-        handleSave={handleSave}
+        handleSave={handleSave(formValues)}
         handleCancel={handleCancel}
         tariffsTelList={tariffsTelList}
         tariffsInetList={tariffsInetList}

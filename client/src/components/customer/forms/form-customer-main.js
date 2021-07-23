@@ -1,7 +1,8 @@
-import React, { useState } from 'react'
+import React, { useState, useContext } from 'react'
 import Box from '@material-ui/core/Box'
 import Step from '@material-ui/core/Step'
 import Paper from '@material-ui/core/Paper'
+import { useNavigate } from 'react-router-dom'
 import Stepper from '@material-ui/core/Stepper'
 import StepLabel from '@material-ui/core/StepLabel'
 import Typography from '@material-ui/core/Typography'
@@ -15,8 +16,10 @@ import Success from 'src/common/success'
 import { tariffsTelList, tariffsInetList, TariffTel } from 'src/store/tariffs'
 import { hints, parameters } from 'src/common/helper-form'
 import { FORM_CUSTOMER_MAIN_TYPE } from 'src/types/types'
+import { updateCustomer, addCustomer } from 'src/store/api-action'
+import { MainContext } from 'src/context/main-context'
 
-// заголовки шагов
+// step headers
 const labels = ['Основное', 'Договора', 'Банк', 'Подтв']
 
 const initialValues = {
@@ -79,36 +82,28 @@ const schema = yup.object().shape({
   dateDogInet: yup.date(),
   // bank
   bankName: yup.string().min(2, hints.min).max(100, hints.max).required(),
-  bankAccount: yup
-    .string()
-    .matches(/^\d{20}$/, {
-      excludeEmptyString: true,
-      message: hints.bankAccount,
-    }),
-  bankKAccount: yup
-    .string()
-    .matches(/^\d{20}$/, {
-      excludeEmptyString: true,
-      message: hints.bankAccount,
-    }),
+  bankAccount: yup.string().matches(/^\d{20}$/, {
+    excludeEmptyString: true,
+    message: hints.bankAccount,
+  }),
+  bankKAccount: yup.string().matches(/^\d{20}$/, {
+    excludeEmptyString: true,
+    message: hints.bankAccount,
+  }),
   bankBik: yup
     .string()
     .matches(/^\d{9}$/, { excludeEmptyString: true, message: hints.bankBik }),
-  bankInn: yup
-    .string()
-    .matches(/^\d{10}(\d\d)?$/, {
-      excludeEmptyString: true,
-      message: hints.bankInn,
-    }),
+  bankInn: yup.string().matches(/^\d{10}(\d\d)?$/, {
+    excludeEmptyString: true,
+    message: hints.bankInn,
+  }),
   bankKpp: yup
     .string()
     .matches(/^\d{9}$/, { excludeEmptyString: true, message: hints.bankKpp }),
-  bankOkpo: yup
-    .string()
-    .matches(/^\d{8}(\d\d)?$/, {
-      excludeEmptyString: true,
-      message: hints.bankOkpo,
-    }),
+  bankOkpo: yup.string().matches(/^\d{8}(\d\d)?$/, {
+    excludeEmptyString: true,
+    message: hints.bankOkpo,
+  }),
 })
 
 schema.fields.tarTel.id = 'tid'
@@ -137,23 +132,23 @@ const FormCustomerMain = ({
   isNewCustomer = true,
   custType = 'u',
   customer = null,
+  tarTel = tariffsTelList[TariffTel.UR],
 }) => {
+  const main = useContext(MainContext)
+  const navigate = useNavigate()
   const classes = useStyles()
   const [activeStep, setActiveStep] = useState(0)
   const [formValues, setFormValues] = useState(
-    isNewCustomer ? initialValues : customer
+    isNewCustomer ? { ...initialValues, custType, tarTel } : customer
   )
   const [formErrors, setFormErrors] = useState({})
-  const tarTel = isNewCustomer
-    ? tariffsTelList[TariffTel.UR]
-    : formValues.tarTel
 
-  // следующий шаг
+  // next step
   const handleNext = () => setActiveStep((prev) => prev + 1)
-  // предыдущий шаг
+  // previous step
   const handleBack = () => setActiveStep((prev) => prev - 1)
 
-  // изменения в полях формы
+  // changes in the form fields
   const handleChange = async (e) => {
     const { name, value, type } = e.target
 
@@ -168,6 +163,25 @@ const FormCustomerMain = ({
     } catch (error) {
       setFormErrors({ ...formErrors, [name]: error.message })
     }
+  }
+
+  const handleSave = async (data) => {
+    try {
+      if (isNewCustomer) {
+        const response = await addCustomer(data)
+        main.addCustomer(data, response.custId)
+      } else {
+        await updateCustomer(data)
+        main.updateCustomer(data)
+      }
+      navigate('/app/customers')
+    } catch (e) {
+      console.log('err:', e)
+    }
+  }
+
+  const handleCancel = () => {
+    navigate('/app/customers')
   }
 
   const handleSteps = (step) => {
@@ -210,20 +224,15 @@ const FormCustomerMain = ({
       case 3:
         return (
           <Confirm
-            handleNext={handleNext}
+            handleCancel={handleCancel}
             handleBack={handleBack}
+            handleSave={handleSave}
             values={formValues}
             schema={schema}
           />
         )
       case 4:
-        return (
-          <Success
-            handleNext={handleNext}
-            handleBack={handleBack}
-            values={formValues}
-          />
-        )
+        return <Success values={formValues} />
       default:
         break
     }

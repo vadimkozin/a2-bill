@@ -59,7 +59,15 @@ customersRouter.route('/').get(async (req, res) => {
 
 // (POST) localhost:5000/api/customers/add
 customersRouter.route('/add').post(async (req, res) => {
-  res.send('add..')
+  try {
+    const custIds = await db(TableDb.CUSTOMERS_TEST)
+      .insert(req.body)
+      .on('query', (data) => log(data))
+
+    res.status(200).json({ custId: custIds[0] })
+  } catch (e) {
+    errorHandler(res, e)
+  }
 })
 
 // (PUT) localhost:5000/api/customers/edit/42

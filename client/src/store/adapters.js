@@ -55,7 +55,7 @@ export const customerAdapter = {
       DateDInetRssOOO: formatDate.mysql(o.dateDogInet), // дата договора по интерннет
       // fiz
       f_fio_notice: o.fzFioNotice, // (физ) ФИО в извещениях, например Петров М.П.
-      f_contract_date: o.fzContractDate, // (физ) дата заключения договора
+      f_contract_date: formatDate.mysql(o.fzContractDate), // (физ) дата заключения договора
       f_contract_num: o.fzContractNum, // (физ) номер договора
       f_contract_document: o.fzContractDocument, // (физ) номер паспорта или номер того что в договоре
       f_birthday: formatDate.mysql(o.fzBirthday), // (физ) день рождения
