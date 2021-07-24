@@ -1,41 +1,19 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useContext,
-} from 'react'
-import { fetchNumbers } from 'src/store/api-action'
+import React, { useState, useEffect } from 'react'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { MainContext } from 'src/context/main-context'
+import { useNumber } from 'src/hooks/number.hook'
+import { useMountedRef } from 'src/hooks/mounted-ref.hook'
 
 const withDataNumbers = (Component) => (props) => {
-  const main = useContext(MainContext)
+  const [getNumbers, error] = useNumber()
   const [data, setData] = useState(null)
-  const mountedRef = useRef(true)
-  const [error, setError] = useState(null)
-
-  const fetchData = useCallback(async () => {
-    try {
-      if (main.isNumbers()) {
-        setData(main.numbers)
-      } else {
-        const numbers = await fetchNumbers()
-        if (!mountedRef.current) return null
-        setData(numbers)
-        main.saveNumbers(numbers)
-      }
-    } catch (error) {
-      setError(error)
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const mounted = useMountedRef()
 
   useEffect(() => {
-    fetchData()
-    return () => (mountedRef.current = false)
-  }, [fetchData])
+    getNumbers().then((data) => {
+      if (mounted.current) setData(data)
+    })
+  }, [getNumbers, mounted])
 
   if (error) {
     return <ShowError error={error} />

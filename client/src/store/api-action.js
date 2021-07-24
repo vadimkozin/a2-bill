@@ -3,6 +3,7 @@ import {
   customerAdapter,
   numberAdapter,
   tariffAdapter,
+  tariffsListAdapter,
 } from 'src/store/adapters'
 
 // GET:
@@ -34,6 +35,7 @@ const fetchList = async (what, adapter = null, id = null) => {
 export const fetchCustomers = () => fetchList('customers', customerAdapter)
 export const fetchNumbers = () => fetchList('numbers', numberAdapter)
 export const fetchTariffs = () => fetchList('tariffs', tariffAdapter)
+export const fetchTariffsList = () => fetchList('tariffs/list', tariffsListAdapter)
 export const fetchTariff = (tarId) => fetchList('tariffs', tariffAdapter, tarId)
 export const fetchReportYears = () => fetchList('reports')
 export const fetchReportMonths = (year) => fetchList(`reports/${year}`)

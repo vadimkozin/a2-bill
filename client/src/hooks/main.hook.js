@@ -5,6 +5,7 @@ export const useMain = () => {
   const [customers, setCustomers] = useState(null)
   const [numbers, setNumbers] = useState(null)
   const [tariffs, setTariffs] = useState(null)
+  const [tariffsList, setTariffsList] = useState(null)
   const [title, setTitle] = useState(null)
 
   const saveCustomers = useCallback((customers) => {
@@ -17,6 +18,10 @@ export const useMain = () => {
 
   const saveTariffs = useCallback((tariffs) => {
     setTariffs(tariffs)
+  }, [])
+
+  const saveTariffsList = useCallback((tariffsList) => {
+    setTariffsList(tariffsList)
   }, [])
 
   const saveTitle = useCallback((title) => {
@@ -33,6 +38,7 @@ export const useMain = () => {
   const isCustomers = useCallback(() => isExist(customers), [customers])
   const isNumbers = useCallback(() => isExist(numbers), [numbers])
   const isTariffs = useCallback(() => isExist(tariffs), [tariffs])
+  const isTariffsList = useCallback(() => isExist(tariffsList), [tariffsList])
 
   const getCustomer = useCallback(
     (custId) => {
@@ -42,24 +48,6 @@ export const useMain = () => {
     },
     [customers]
   )
-
-  // const transferNumber__ = useCallback(
-  //   ({ number, custId, comment, dateOn }) => {
-  //     const length = numbers.length
-  //     const customer = getCustomer(custId)
-
-  //     for (let i = 0; i < length; i++) {
-  //       if (String(numbers[i].number) === String(number)) {
-  //         numbers[i].custId = custId
-  //         // numbers[i].comment = comment
-  //         numbers[i].dateOn = formatDate.dmy(dateOn)
-  //         numbers[i].custName = customer ? customer.custAlias : '?'
-  //         break
-  //       }
-  //     }
-  //   },
-  //   [numbers, getCustomer]
-  // )
 
   const transferNumber = useCallback(
     ({ number, custId, comment, dateOn }) => {
@@ -116,18 +104,21 @@ export const useMain = () => {
   )
 
   return {
+    title,
     customers,
     numbers,
     tariffs,
-    title,
+    tariffsList,
+    saveTitle,
     saveCustomers,
     saveNumbers,
     saveTariffs,
-    saveTitle,
+    saveTariffsList,
     reset,
     isCustomers,
     isNumbers,
     isTariffs,
+    isTariffsList,
     transferNumber,
     getNumberInfo,
     getCustomersList,

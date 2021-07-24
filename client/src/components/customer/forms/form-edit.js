@@ -12,12 +12,15 @@ import { fetchCustomers } from 'src/store/api-action'
 import { MainContext } from 'src/context/main-context'
 import FormCustomerMain from 'src/components/customer/forms/form-customer-main'
 import FormPersonalMain from 'src/components/customer/forms/form-personal-main'
+import { useTariff } from 'src/hooks/tariff.hook'
 
 const getCustomer = (customers, custId) =>
   customers.find((cust) => String(cust.custId) === String(custId))
 
 const FormEdit = () => {
   const main = useContext(MainContext)
+  const { getTariffsList } = useTariff()
+  const [tariffsList, setTariffsList] = useState(null)
   const { cid } = useParams()
   const [customer, setCustomer] = useState(null)
   const [error, setError] = useState(null)
@@ -45,13 +48,30 @@ const FormEdit = () => {
     return () => (mountedRef.current = false)
   }, [fetchData])
 
+  useEffect(() => {
+    getTariffsList().then((data) => setTariffsList(data))
+  }, [getTariffsList])
+
   const go = (custType) => {
     switch (custType) {
       case 'u':
-        return <FormCustomerMain isNewCustomer={false} customer={customer} tarTel={customer.tarTel}/>
+        return (
+          <FormCustomerMain
+            isNewCustomer={false}
+            customer={customer}
+            tarTel={customer.tarTel}
+            tarList={tariffsList}
+          />
+        )
 
       case 'f':
-        return <FormPersonalMain isNewCustomer={false} customer={customer} tarTel={customer.tarTel} />
+        return (
+          <FormPersonalMain
+            isNewCustomer={false}
+            customer={customer}
+            tarTel={customer.tarTel}
+          />
+        )
 
       default:
         return (
@@ -64,7 +84,7 @@ const FormEdit = () => {
     return <ShowError error={error} />
   }
 
-  if (customer === null) {
+  if (customer === null || tariffsList === null) {
     return <ShowProgress />
   }
 

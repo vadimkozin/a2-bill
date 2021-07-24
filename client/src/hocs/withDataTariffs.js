@@ -1,41 +1,19 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useContext,
-} from 'react'
-import { fetchTariffs } from 'src/store/api-action'
+import React, { useState, useEffect } from 'react'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { MainContext } from 'src/context/main-context'
+import { useTariff } from 'src/hooks/tariff.hook'
+import { useMountedRef } from 'src/hooks/mounted-ref.hook'
 
 const withDataTariffs = (Component) => (props) => {
-  const main = useContext(MainContext)
+  const { getTariffs, error } = useTariff()
   const [data, setData] = useState(null)
-  const [error, setError] = useState(null)
-  const mountedRef = useRef(true)
-
-  const fetchData = useCallback(async () => {
-    try {
-        if (main.isTariffs()) {
-          setData(main.tariffs)
-        } else {
-        const tariffs = await fetchTariffs()
-        if (!mountedRef.current) return null
-        setData(tariffs)
-        main.saveTariffs(tariffs)
-      }
-    } catch (error) {
-      setError(error)
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+  const mounted = useMountedRef()
 
   useEffect(() => {
-    fetchData()
-    return () => (mountedRef.current = false)
-  }, [fetchData])
+    getTariffs().then((data) => {
+      if (mounted.current) setData(data)
+    })
+  }, [getTariffs, mounted])
 
   if (error) {
     return <ShowError error={error} />

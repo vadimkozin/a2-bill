@@ -171,3 +171,16 @@ export const reportAdapter = {
     }
   },
 }
+
+export const tariffsListAdapter = {
+  adaptToClient(items) {
+    return items.map((item) => this.adaptToClientTariffsList(item))
+  },
+
+  adaptToClientTariffsList(o) {
+    return {
+      label: o.name, // название тарифа
+      tid: String(o.tid), // код тарифа
+    }
+  },
+}

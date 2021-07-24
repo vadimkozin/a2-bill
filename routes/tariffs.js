@@ -27,6 +27,24 @@ tariffsRouter.route('/').get(async (req, res) => {
   }
 })
 
+// (GET) localhost:5000/api/tariffs/list
+tariffsRouter.route('/list').get(async (req, res) => {
+  try {
+    const tariffsList = await db(`${TableDb.TARIFFS_LIST} AS t`)
+      .select(
+        'tid',
+        'name'
+      )
+      .orderBy('id')
+      .on('query', (data) => log(data))
+
+    res.status(200).json(tariffsList)
+  } catch (e) {
+    errorHandler(res, e)
+  }
+})
+
+
 // SELECT t.nid, c.name, t.tar custTar, c.tar operTar, round(t.tar/c.tar,2) kf FROM mtsTar t JOIN komstarCode c ON t.nid=c.nid WHERE t.tid=1 ORDER BY c.name;
 // (GET) localhost:5000/api/tariffs/:1
 tariffsRouter.route('/:tarId').get(async (req, res) => {
@@ -50,5 +68,7 @@ tariffsRouter.route('/:tarId').get(async (req, res) => {
     errorHandler(res, e)
   }
 })
+
+
 
 module.exports = tariffsRouter

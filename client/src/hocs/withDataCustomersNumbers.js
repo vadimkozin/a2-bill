@@ -1,67 +1,35 @@
-import React, {
-  useState,
-  useEffect,
-  useRef,
-  useCallback,
-  useContext,
-} from 'react'
-import { fetchCustomers, fetchNumbers } from 'src/store/api-action'
+import React, { useState, useEffect, useCallback } from 'react'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { MainContext } from 'src/context/main-context'
+import { useCustomer } from 'src/hooks/customer.hook'
+import { useNumber } from 'src/hooks/number.hook'
+import { useMountedRef } from 'src/hooks/mounted-ref.hook'
 
 const withDataCustomersNumbers = (Component) => (props) => {
-  const main = useContext(MainContext)
   const [customers, setCustomers] = useState(null)
   const [numbers, setNumbers] = useState(null)
-  const [error, setError] = useState(null)
-  const mountedRef = useRef(true)
-  const mountedRef2 = useRef(true)
+
+  const [getCustomers, error1] = useCustomer()
+  const [getNumbers, error2] = useNumber()
+  const mounted = useMountedRef()
 
   const fetchData = useCallback(async () => {
-    try {
-      if (main.isCustomers()) {
-        setCustomers(main.customers)
-      } else {
-        const customers = await fetchCustomers()
-        if (!mountedRef.current) return null
-        setCustomers(customers)
-        main.saveCustomers(customers)
-      }
-    } catch (error) {
-      setError(error)
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
-
-  const fetchData2 = useCallback(async () => {
-    try {
-      if (main.isNumbers()) {
-        setNumbers(main.numbers)
-      } else {
-        const numbers = await fetchNumbers()
-        if (!mountedRef2.current) return null
-        setNumbers(numbers)
-        main.saveNumbers(numbers)
-      }
-    } catch (error) {
-      setError(error)
-    }
-    //eslint-disable-next-line react-hooks/exhaustive-deps
-  }, [])
+    const customers = await getCustomers()
+    if (mounted.current) setCustomers(customers)
+    const numbers = await getNumbers()
+    if (mounted.current) setNumbers(numbers)
+  }, [getCustomers, getNumbers, mounted])
 
   useEffect(() => {
     fetchData()
-    return () => (mountedRef.current = false)
   }, [fetchData])
 
-  useEffect(() => {
-    fetchData2()
-    return () => (mountedRef2.current = false)
-  }, [fetchData2])
+  if (error1) {
+    return <ShowError error={error1} />
+  }
 
-  if (error) {
-    return <ShowError error={error} />
+  if (error2) {
+    return <ShowError error={error2} />
   }
 
   if (customers === null || numbers === null) {

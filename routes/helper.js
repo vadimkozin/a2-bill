@@ -9,6 +9,7 @@ const TableDb = {
   NUMBERS: 'telefon.tel_test_',
   NUMBERS_A2: 'telefon.q1000a2',
   TARIFFS: 'tarif.mtsTar',
+  TARIFFS_LIST: 'tarif.tariff_tel',
   PHONE_CODE: 'tarif.komstarCode',
   USERS: 'bill.users',
 }

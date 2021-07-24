@@ -4,18 +4,21 @@ import { useMain } from 'src/hooks/main.hook'
 
 const MainContextProvider = ({ children }) => {
   const {
+    title,
     customers,
     numbers,
     tariffs,
-    title,
+    tariffsList,
     saveCustomers,
     saveNumbers,
     saveTariffs,
+    saveTariffsList,
     saveTitle,
     reset,
     isCustomers,
     isNumbers,
     isTariffs,
+    isTariffsList,
     transferNumber,
     getNumberInfo,
     getCustomersList,
@@ -23,23 +26,26 @@ const MainContextProvider = ({ children }) => {
     addCustomer,
   } = useMain()
 
-  // console.log(`MAIN:`, { customers, numbers, tariffs, title })
+  console.log(`MAIN:`, { customers, numbers, tariffs, title, tariffsList })
 
   return (
     <MainContext.Provider
       value={{
+        title,
         customers,
         numbers,
         tariffs,
-        title,
+        tariffsList,
         saveCustomers,
         saveNumbers,
         saveTariffs,
+        saveTariffsList,
         saveTitle,
         reset,
         isCustomers,
         isNumbers,
         isTariffs,
+        isTariffsList,
         transferNumber,
         getNumberInfo,
         getCustomersList,

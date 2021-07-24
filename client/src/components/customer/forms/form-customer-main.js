@@ -19,6 +19,7 @@ import { FORM_CUSTOMER_MAIN_TYPE } from 'src/types/types'
 import { updateCustomer, addCustomer } from 'src/store/api-action'
 import { MainContext } from 'src/context/main-context'
 
+
 // step headers
 const labels = ['Основное', 'Договора', 'Банк', 'Подтв']
 
@@ -133,7 +134,9 @@ const FormCustomerMain = ({
   custType = 'u',
   customer = null,
   tarTel = tariffsTelList[TariffTel.UR],
+  tarList,
 }) => {
+  console.log(`tarList:`, tarList)
   const main = useContext(MainContext)
   const navigate = useNavigate()
   const classes = useStyles()
@@ -191,7 +194,8 @@ const FormCustomerMain = ({
           <FormCustomerBasic
             handleNext={handleNext}
             handleChange={handleChange}
-            tariffsTelList={tariffsTelList}
+            // tariffsTelList={tariffsTelList}
+            tariffsTelList={tarList}
             tariffsInetList={tariffsInetList}
             isNewCustomer={isNewCustomer}
             values={{ ...formValues, custType, tarTel }}
