@@ -3,7 +3,10 @@ const config = require('config')
 const db = require('knex')(config.get('db_customers'))
 const customersRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
+const auth = require('../middleware/auth.middleware')
 const { log, TableDb } = require('./helper')
+
+customersRouter.use(auth)
 
 // (GET) localhost:5000/api/customers
 customersRouter.route('/').get(async (req, res) => {

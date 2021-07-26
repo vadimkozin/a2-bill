@@ -4,8 +4,10 @@ const db = require('knex')(config.get('db_numbers'))
 const db_cust = require('knex')(config.get('db_customers'))
 const numberTransferRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
+const auth = require('../middleware/auth.middleware')
 const { log, createMysqlDate, subtractDay, TableDb } = require('./helper')
 
+numberTransferRouter.use(auth)
 
 /**
  * смена арендатора номера number

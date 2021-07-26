@@ -31,7 +31,7 @@ authRouter.route('/login').post(async (req, res) => {
     }
 
     const token = jwt.sign({ userId: user.id }, config.get('jwtSecret'), {
-      expiresIn: '1h',
+      expiresIn: '1d',
     })
 
     res.status(200).json({ token, userId: user.id, userName: login })

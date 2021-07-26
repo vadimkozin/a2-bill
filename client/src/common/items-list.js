@@ -110,7 +110,6 @@ const ItemsList = ({
           </TableHead>
           <TableBody>
             {items
-              // .slice(rowsPerPage * page, rowsPerPage * (page + 1))
               .slice(
                 rowsPerPage * page,
                 rowsPerPage === -1 ? items.length : rowsPerPage * (page + 1)

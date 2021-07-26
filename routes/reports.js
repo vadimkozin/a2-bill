@@ -4,12 +4,15 @@ const config = require('config')
 const reportsRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
 const reportHelper = require('../utils/report-helper')
+const auth = require('../middleware/auth.middleware')
 
 const FILE_TO_DESCRIPTION_MAP = {
   '^\\d{4}_\\d{2}\\.zip$': 'Счета и расшифровки клиентам в pdf-формате', // 2021_06.zip
   '^\\d{4}_\\d{2}\\.xlsx$': 'Книга продаж и акт взаиморасчёта с МТС', // 2021_06.xlsx
   '^\\d{4}_\\d{2}__loc\\.xlsx$': 'Итоги по местной связи', // 2021_06__loc.xlsx
 }
+
+reportsRouter.use(auth)
 
 // (GET) localhost:5000/api/reports --> ["2021","2022", ...]
 reportsRouter.route('/').get(async (req, res) => {

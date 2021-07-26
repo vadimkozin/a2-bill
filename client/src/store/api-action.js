@@ -1,10 +1,20 @@
-import { BACKEND_URL, TIMEOUT_MAX } from 'src/const'
+import { BACKEND_URL, TIMEOUT_MAX, STORAGE_NAME } from 'src/const'
 import {
   customerAdapter,
   numberAdapter,
   tariffAdapter,
   tariffsListAdapter,
 } from 'src/store/adapters'
+
+const getToken = () => {
+  const data = JSON.parse(localStorage.getItem(STORAGE_NAME))
+  return data && data.token ? data.token : null
+}
+
+const getHeaders = () => {
+  const token = getToken()
+  return token ? { Authorization: `Bearer ${token}` } : {}
+}
 
 // GET:
 const fetchList = async (what, adapter = null, id = null) => {
@@ -15,7 +25,10 @@ const fetchList = async (what, adapter = null, id = null) => {
     let url = `${BACKEND_URL}/${what}`
     if (id) url += `/${id}`
 
-    const response = await fetch(url, { signal: controller.signal })
+    const response = await fetch(url, {
+      headers: getHeaders(),
+      signal: controller.signal,
+    })
 
     if (response.ok) {
       const items = await response.json()
@@ -35,7 +48,8 @@ const fetchList = async (what, adapter = null, id = null) => {
 export const fetchCustomers = () => fetchList('customers', customerAdapter)
 export const fetchNumbers = () => fetchList('numbers', numberAdapter)
 export const fetchTariffs = () => fetchList('tariffs', tariffAdapter)
-export const fetchTariffsList = () => fetchList('tariffs/list', tariffsListAdapter)
+export const fetchTariffsList = () =>
+  fetchList('tariffs/list', tariffsListAdapter)
 export const fetchTariff = (tarId) => fetchList('tariffs', tariffAdapter, tarId)
 export const fetchReportYears = () => fetchList('reports')
 export const fetchReportMonths = (year) => fetchList(`reports/${year}`)
@@ -43,7 +57,7 @@ export const fetchReportFiles = (year, period) =>
   fetchList(`reports/${year}/${period}`)
 
 // PUT/POST:
-const update = async (what, item, method='PUT') => {
+const update = async (what, item, method = 'PUT') => {
   const controller = new AbortController()
   setTimeout(() => controller.abort(), TIMEOUT_MAX)
 

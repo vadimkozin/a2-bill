@@ -22,7 +22,7 @@ export const FORM_CUSTOMER_MAIN_TYPE = {
   isNewCustomer: bool.isRequired,
   custType: string,
   customer: object,
-  tarTel: object,
+  tariffsTelList: array.isRequired,
 }
 
 export const FORM_PERSONAL_TYPE = {

@@ -1,4 +1,4 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react'
 import Grid from '@material-ui/core/Grid'
 import Radio from '@material-ui/core/Radio'
 import Paper from '@material-ui/core/Paper'
@@ -11,6 +11,9 @@ import Typography from '@material-ui/core/Typography'
 import { makeStyles } from '@material-ui/core/styles'
 import FormCustomerMain from './form-customer-main'
 import FormPersonalMain from './form-personal-main'
+import ShowError from 'src/common/show-error'
+import ShowProgress from 'src/common/show-progress'
+import { useTariff } from 'src/hooks/tariff.hook'
 
 const useStyles = makeStyles((theme) => ({
   paper: {
@@ -39,6 +42,12 @@ const FormAdd = () => {
   const classes = useStyles()
   const [typeCust, setTypeCust] = useState(null)
   const [next, setNext] = useState(false)
+  const [tariffsList, setTariffsList] = useState(null)
+  const { getTariffsList, error } = useTariff()
+
+  useEffect(() => {
+    getTariffsList().then((data) => setTariffsList(data))
+  }, [getTariffsList])
 
   const handleChange = (event) => setTypeCust(event.target.value)
 
@@ -47,12 +56,32 @@ const FormAdd = () => {
   const go = (typeCust) => {
     switch (typeCust) {
       case 'u':
-        return <FormCustomerMain isNewCustomer={true} />
+        return (
+          <FormCustomerMain
+            isNewCustomer={true}
+            custType={typeCust}
+            tariffsTelList={tariffsList}
+          />
+        )
       case 'f':
-        return <FormPersonalMain isNewCustomer={true} />
+        return (
+          <FormPersonalMain
+            isNewCustomer={true}
+            custType={typeCust}
+            tariffsTelList={tariffsList}
+          />
+        )
       default:
         break
     }
+  }
+
+  if (error) {
+    return <ShowError error={error} />
+  }
+
+  if (tariffsList === null) {
+    return <ShowProgress />
   }
 
   return (

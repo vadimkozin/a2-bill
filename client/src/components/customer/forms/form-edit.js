@@ -1,52 +1,32 @@
 import React, {
   useState,
   useEffect,
-  useRef,
-  useCallback,
-  useContext,
 } from 'react'
 import { useParams } from 'react-router-dom'
 import ShowError from 'src/common/show-error'
 import ShowProgress from 'src/common/show-progress'
-import { fetchCustomers } from 'src/store/api-action'
-import { MainContext } from 'src/context/main-context'
 import FormCustomerMain from 'src/components/customer/forms/form-customer-main'
 import FormPersonalMain from 'src/components/customer/forms/form-personal-main'
 import { useTariff } from 'src/hooks/tariff.hook'
+import { useCustomer } from 'src/hooks/customer.hook'
+import { useMountedRef } from 'src/hooks/mounted-ref.hook'
 
 const getCustomer = (customers, custId) =>
   customers.find((cust) => String(cust.custId) === String(custId))
 
 const FormEdit = () => {
-  const main = useContext(MainContext)
-  const { getTariffsList } = useTariff()
-  const [tariffsList, setTariffsList] = useState(null)
   const { cid } = useParams()
+  const [tariffsList, setTariffsList] = useState(null)
   const [customer, setCustomer] = useState(null)
-  const [error, setError] = useState(null)
-  const mountedRef = useRef(true)
-
-  const fetchData = useCallback(async () => {
-    try {
-      if (main.isCustomers()) {
-        setCustomer(getCustomer(main.customers, cid))
-      } else {
-        const customers = await fetchCustomers()
-        if (!mountedRef.current) return null
-        const customer = getCustomer(customers, cid)
-        if (!customer) throw new Error(`Клиент с кодом : ${cid} не найден.`)
-        setCustomer(getCustomer(customers, cid))
-        main.saveCustomers(customers)
-      }
-    } catch (error) {
-      setError(error)
-    }
-  }, [cid, main])
+  const { getTariffsList } = useTariff()
+  const [getCustomers, error] = useCustomer()
+  const mounted = useMountedRef()
 
   useEffect(() => {
-    fetchData()
-    return () => (mountedRef.current = false)
-  }, [fetchData])
+    getCustomers().then((customers) => {
+      if (mounted.current) setCustomer(getCustomer(customers, cid))
+    })
+  }, [getCustomers, mounted, cid])
 
   useEffect(() => {
     getTariffsList().then((data) => setTariffsList(data))
@@ -60,7 +40,7 @@ const FormEdit = () => {
             isNewCustomer={false}
             customer={customer}
             tarTel={customer.tarTel}
-            tarList={tariffsList}
+            tariffsTelList={tariffsList}
           />
         )
 
@@ -70,6 +50,7 @@ const FormEdit = () => {
             isNewCustomer={false}
             customer={customer}
             tarTel={customer.tarTel}
+            tariffsTelList={tariffsList}
           />
         )
 
@@ -87,6 +68,9 @@ const FormEdit = () => {
   if (customer === null || tariffsList === null) {
     return <ShowProgress />
   }
+
+  console.log(`customer:`, customer)
+  console.log(`tariffsList:`, tariffsList)
 
   return <>{go(customer.custType)}</>
 }

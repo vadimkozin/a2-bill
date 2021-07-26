@@ -4,7 +4,10 @@ const db = require('knex')(config.get('db_numbers'))
 const numbersRouter = express.Router()
 const errorHandler = require('../utils/error-handler')
 const numberTransferRouter = require('./number-transfer')
+const auth = require('../middleware/auth.middleware')
 const { log, TableDb } = require('./helper')
+
+numbersRouter.use(auth)
 
 // (GET) localhost:5000/api/numbers
 numbersRouter.route('/').get(async (req, res) => {
