@@ -9,7 +9,6 @@ const routesLogin = [
     element: <MainLayout />,
     children: [
       { path: 'login', element: <Login /> },
-      { path: '/', element: <Navigate to='/login' /> },
       { path: '*', element: <Navigate to='/login' /> },
     ],
   },

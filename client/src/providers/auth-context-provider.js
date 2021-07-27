@@ -1,19 +1,16 @@
 import React from 'react'
 import { AuthContext } from 'src/context/auth-context'
 import { useAuth } from 'src/hooks/auth.hook'
+import ShowProgress from 'src/common/show-progress'
 
 const AuthContextProvider = ({ children }) => {
-  // const { token, userId, login, logout, ready, userName } = useAuth()
-  const { token, userId, login, logout, userName } = useAuth()
+  const { token, userId, login, logout, ready, userName } = useAuth()
 
   const isAuthenticated = !!token
 
-  console.log(`isAuthenticated:`, isAuthenticated)
-  // console.log(`AUTH:`, { userId, ready, userName })
-
-  // if (!ready) {
-  //   return <Loading />
-  // }
+  if (!ready) {
+    return <ShowProgress loading='' size={16}/>
+  }
 
   return (
     <AuthContext.Provider
