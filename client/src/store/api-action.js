@@ -6,6 +6,8 @@ import {
   tariffsListAdapter,
 } from 'src/store/adapters'
 
+const headers = { 'Content-Type': 'application/json;charset=utf-8' }
+
 const getToken = () => {
   const data = JSON.parse(localStorage.getItem(STORAGE_NAME))
   return data && data.token ? data.token : null
@@ -14,6 +16,11 @@ const getToken = () => {
 const getHeaders = () => {
   const token = getToken()
   return token ? { Authorization: `Bearer ${token}` } : {}
+}
+
+const getHeadersUpdate = () => {
+  const token = getToken()
+  return token ? { ...headers, Authorization: `Bearer ${token}` } : headers
 }
 
 // GET:
@@ -66,14 +73,10 @@ const update = async (what, item, method = 'PUT') => {
 
     const response = await fetch(url, {
       method,
-      headers: {
-        'Content-Type': 'application/json;charset=utf-8',
-      },
+      headers: getHeadersUpdate(),
       signal: controller.signal,
       body: JSON.stringify(item),
     })
-
-    // console.log(`response:`, response)
 
     if (response.ok) {
       const items = await response.json()
